@@ -6,12 +6,12 @@ use SiteAudit\Base\AuditResponse;
 
 class PreprocessJS extends DrushCheck {
   public function check() {
-    $output = $this->executeDrush('vget preprocess_js');
+    $output = (int) $this->getVariable('preprocess_js');
 
     $response = new AuditResponse();
     $response->setDescription('With JavaScript file aggregation disabled, your website visitors are experiencing slower page loads and the server load is increased.');
     $response->setRemediation("Enable JS optimization on Drupal's Performance page");
-    if ($output === "preprocess_js: '1'") {
+    if ($output === 1) {
       $response->setSuccess('JavaScript aggregation is enabled');
     }
     else {

@@ -61,4 +61,16 @@ abstract class DrushCheck extends AuditCheck {
 
     return $output;
   }
+
+  /**
+   * Get a single variable over Drush.
+   *
+   * @param $name
+   * @return mixed
+   * @throws \Exception
+   */
+  public function getVariable($name) {
+    $response = $this->executeDrush("variable-get ${name}", ['format' => 'json'], ['exact']);
+    return $response->$name;
+  }
 }

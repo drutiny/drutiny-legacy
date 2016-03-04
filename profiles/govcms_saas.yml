@@ -4,3 +4,5 @@ checks:
   \SiteAudit\Drush\ModuleSyslog : {}
   \SiteAudit\Drush\PreprocessCSS : {}
   \SiteAudit\Drush\PreprocessJS : {}
+  \SiteAudit\Drush\PageCacheMaximumAge :
+    cache: 300
