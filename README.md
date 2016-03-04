@@ -14,4 +14,5 @@ composer install
 
 ```
 php site-audit audit:site govcms.casastg.govcms.gov.au --profile=govcms_saas -v
+php site-audit audit:site iagwebsites.wfi.prod --profile=govcms_saas -v
 ```

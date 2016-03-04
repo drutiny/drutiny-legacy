@@ -1,8 +1,11 @@
-checks:
+metadata :
+  title : 'govCMS SaaS'
+checks :
   \SiteAudit\Drush\ModulePHP : {}
   \SiteAudit\Drush\ModuleStatistics : {}
   \SiteAudit\Drush\ModuleSyslog : {}
   \SiteAudit\Drush\PreprocessCSS : {}
   \SiteAudit\Drush\PreprocessJS : {}
   \SiteAudit\Drush\PageCacheMaximumAge :
-    cache: 300
+    cache : 300
+  \SiteAudit\Drush\UpdateDBStatus: {}
