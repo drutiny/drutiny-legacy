@@ -51,7 +51,12 @@ abstract class DrushCheck extends AuditCheck {
 
     // unwrap output if there is only a single line.
     if (count($output) === 1) {
-      return current($output);
+      $output = current($output);
+
+      // decode JSON.
+      if (isset($arguments['format']) && $arguments['format'] === 'json') {
+        $output = json_decode($output);
+      }
     }
 
     return $output;

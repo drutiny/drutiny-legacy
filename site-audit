@@ -5,9 +5,9 @@ require __DIR__ . '/vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
 use SiteAudit\Command\GreetCommand;
-use SiteAudit\Command\SaasSiteAudit;
+use SiteAudit\Command\SiteAudit;
 
 $application = new Application();
 $application->add(new GreetCommand());
-$application->add(new SaasSiteAudit());
+$application->add(new SiteAudit());
 $application->run();

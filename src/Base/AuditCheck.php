@@ -10,20 +10,17 @@ abstract class AuditCheck {
   protected $alias;
   protected $input;
   protected $output;
+  protected $options;
   protected $url;
   protected $primary_web;
   protected $docroot;
   protected $multisite_folder;
 
-  public function __construct($alias, InputInterface $input, OutputInterface $output) {
+  public function __construct($alias, InputInterface $input, OutputInterface $output, $options = []) {
     $this->alias = $alias;
     $this->input = $input;
     $this->output = $output;
-
-    // Figure out some other details based on the current drush alias.
-
+    $this->options = $options;
   }
-
-
 
 }

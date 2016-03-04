@@ -1,0 +1,6 @@
+checks:
+  \SiteAudit\Drush\ModulePHP : {}
+  \SiteAudit\Drush\ModuleStatistics : {}
+  \SiteAudit\Drush\ModuleSyslog : {}
+  \SiteAudit\Drush\PreprocessCSS : {}
+  \SiteAudit\Drush\PreprocessJS : {}
