@@ -1,0 +1,8 @@
+{
+    "autoload": {
+        "psr-4": {"SiteAudit\\": "src/"}
+    },
+    "require": {
+        "symfony/console": "^3.0"
+    }
+}
