@@ -2,9 +2,10 @@
 
 namespace SiteAudit\Drush;
 
+use SiteAudit\Base\AuditCheck;
 use SiteAudit\Base\AuditResponse;
 
-class ModuleSyslog extends DrushCheck {
+class ModuleSyslog extends AuditCheck {
   public function check() {
     $output = $this->executeDrush('pm-info syslog', ['format' => 'json']);
 

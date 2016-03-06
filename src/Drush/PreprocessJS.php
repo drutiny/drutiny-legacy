@@ -2,9 +2,10 @@
 
 namespace SiteAudit\Drush;
 
+use SiteAudit\Base\AuditCheck;
 use SiteAudit\Base\AuditResponse;
 
-class PreprocessJS extends DrushCheck {
+class PreprocessJS extends AuditCheck {
   public function check() {
     $output = (int) $this->getVariable('preprocess_js');
 

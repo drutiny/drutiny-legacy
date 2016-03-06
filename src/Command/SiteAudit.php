@@ -2,6 +2,7 @@
 
 namespace SiteAudit\Command;
 
+use SiteAudit\Base\CoreStatus;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,11 +31,6 @@ class SiteAudit extends Command {
         InputArgument::REQUIRED,
         'The drush alias for the site'
       )
-      ->addArgument(
-        'url',
-        InputArgument::OPTIONAL,
-        'The url to the site, e.g. www.govcms.com.au'
-      )
     ;
   }
 
@@ -45,6 +41,11 @@ class SiteAudit extends Command {
     $drush_alias = $input->getArgument('drush-alias');
     $profile = $input->getOption('profile');
 
+    // Ensure we can bootstrap the drush alias, and get the required properties
+    // from the alias. Store these in an object to use in the checks to avoid
+    // duplication.
+    $core_status = new CoreStatus($drush_alias, $input, $output);
+
     // Profiles allow arbitrary checks to run in an arbitrary order. Optional
     // options can be passed in to customise the checks.
     $yaml = dirname(__FILE__) . "/../../profiles/${profile}.yml";
@@ -54,7 +55,7 @@ class SiteAudit extends Command {
     $parser = new Parser();
     $profile = $parser->parse(file_get_contents($yaml));
     foreach ($profile['checks'] as $check => $options) {
-      $test = new $check($drush_alias, $input, $output, $options);
+      $test = new $check($drush_alias, $input, $output, $options, $core_status);
       $test->check();
     }
   }

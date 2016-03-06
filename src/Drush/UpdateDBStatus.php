@@ -2,9 +2,10 @@
 
 namespace SiteAudit\Drush;
 
+use SiteAudit\Base\AuditCheck;
 use SiteAudit\Base\AuditResponse;
 
-class UpdateDBStatus extends DrushCheck {
+class UpdateDBStatus extends AuditCheck {
   public function check() {
     $output = $this->executeDrush('updatedb-status');
 

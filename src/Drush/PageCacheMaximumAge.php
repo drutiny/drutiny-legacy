@@ -2,9 +2,10 @@
 
 namespace SiteAudit\Drush;
 
+use SiteAudit\Base\AuditCheck;
 use SiteAudit\Base\AuditResponse;
 
-class PageCacheMaximumAge extends DrushCheck {
+class PageCacheMaximumAge extends AuditCheck {
   public function check() {
     $output = (int) $this->getVariable('page_cache_maximum_age');
 

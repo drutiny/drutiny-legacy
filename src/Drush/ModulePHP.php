@@ -2,9 +2,10 @@
 
 namespace SiteAudit\Drush;
 
+use SiteAudit\Base\AuditCheck;
 use SiteAudit\Base\AuditResponse;
 
-class ModulePHP extends DrushCheck {
+class ModulePHP extends AuditCheck {
   public function check() {
     $output = $this->executeDrush('pm-info php', ['format' => 'json']);
 
