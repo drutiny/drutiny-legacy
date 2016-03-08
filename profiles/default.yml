@@ -1,6 +1,13 @@
-checks:
+metadata :
+  title : 'Site audit'
+checks :
   \SiteAudit\Drush\ModulePHP : {}
   \SiteAudit\Drush\ModuleStatistics : {}
   \SiteAudit\Drush\ModuleSyslog : {}
   \SiteAudit\Drush\PreprocessCSS : {}
   \SiteAudit\Drush\PreprocessJS : {}
+  \SiteAudit\Drush\PageCacheMaximumAge :
+    cache : 300
+  \SiteAudit\Drush\UpdateDBStatus: {}
+  \SiteAudit\SSH\HtaccessRedirects :
+    max_redirects : 8

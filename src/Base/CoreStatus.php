@@ -13,8 +13,11 @@ class CoreStatus {
   protected $input;
   protected $output;
   protected $core_status;
+  protected $site_alias;
   protected $uri;
   protected $primary_web;
+  protected $remote_user;
+  protected $ssh_options;
   protected $root;
   protected $site;
 
@@ -25,10 +28,13 @@ class CoreStatus {
 
     // Set some variables up.
     $this->core_status = $this->fetchCoreStatus();
+    $this->site_alias = $this->fetchSiteAlias();
     $this->uri = $this->core_status->uri;
     $this->root = $this->core_status->root;
     $this->site = $this->core_status->site;
-    $this->primary_web = $this->fetchPrimaryWeb();
+    $this->ssh_options = isset($this->site_alias['ssh-options']) ? $this->site_alias['ssh-options'] : '';
+    $this->primary_web = $this->site_alias['remote-host'];
+    $this->remote_user = $this->site_alias['remote-user'];
   }
 
   private function fetchCoreStatus() {
@@ -45,7 +51,7 @@ class CoreStatus {
     exec($command, $output, $return_var);
 
     if ($return_var !== 0) {
-      throw new \Exception('Non-zero response after running command');
+      throw new \Exception("Drush command failed ($return_var): " . print_r($output, 1));
     }
 
     // unwrap output if there is only a single line.
@@ -57,7 +63,7 @@ class CoreStatus {
     throw new \Exception('invalid response');
   }
 
-  private function fetchPrimaryWeb() {
+  private function fetchSiteAlias() {
     $command = self::DRUSH_BIN . ' site-alias @' . $this->alias . ' --format=json';
 
     if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
@@ -71,13 +77,13 @@ class CoreStatus {
     exec($command, $output, $return_var);
 
     if ($return_var !== 0) {
-      throw new \Exception('Non-zero response after running command');
+      throw new \Exception("Drush command failed ($return_var): " . print_r($output, 1));
     }
 
     // unwrap output if there is only a single line.
     if (count($output) === 1) {
       $output = json_decode(current($output));
-      return $output->{$this->alias}->{'remote-host'};
+      return (array) $output->{$this->alias};
     }
 
     throw new \Exception('invalid response');
@@ -109,6 +115,20 @@ class CoreStatus {
    */
   public function getSite() {
     return $this->site;
+  }
+
+  /**
+   * @return string
+   */
+  public function getSshOptions() {
+    return $this->ssh_options;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getRemoteUser() {
+    return $this->remote_user;
   }
 
 }

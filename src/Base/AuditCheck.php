@@ -2,7 +2,6 @@
 
 namespace SiteAudit\Base;
 
-use SiteAudit\Base\CoreStatus;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -17,22 +16,34 @@ class AuditCheck {
   protected $core_status;
   protected $uri;
   protected $primary_web;
+  protected $remote_user;
+  protected $ssh_options;
   protected $root;
   protected $site;
 
-  public function __construct($alias, InputInterface $input, OutputInterface $output, $options = [], $core_status) {
+  /**
+   * AuditCheck constructor.
+   *
+   * @param $alias
+   * @param \Symfony\Component\Console\Input\InputInterface $input
+   * @param \Symfony\Component\Console\Output\OutputInterface $output
+   * @param array $options
+   * @param \SiteAudit\Base\CoreStatus $core_status
+   */
+  public function __construct($alias, InputInterface $input, OutputInterface $output, $options = [], CoreStatus $core_status) {
     $this->alias = $alias;
     $this->input = $input;
     $this->output = $output;
     $this->options = $options;
-    /** @var \SiteAudit\Base\CoreStatus $core_status */
     $this->core_status = $core_status;
 
     // Set some variables up.
     $this->uri = $this->core_status->getUri();
     $this->root = $this->core_status->getRoot();
     $this->site = $this->core_status->getSite();
+    $this->ssh_options = $this->core_status->getSshOptions();
     $this->primary_web = $this->core_status->getPrimaryWeb();
+    $this->remote_user = $this->core_status->getRemoteUser();
   }
 
   private function generateDrushString($command, $arguments, $options) {
@@ -72,7 +83,7 @@ class AuditCheck {
     exec($command, $output, $return_var);
 
     if ($return_var !== 0) {
-      throw new \Exception('Non-zero response after running command');
+      throw new \Exception("Drush command failed ($return_var): " . print_r($output, 1));
     }
 
     // unwrap output if there is only a single line.
