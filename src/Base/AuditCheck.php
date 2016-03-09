@@ -104,6 +104,10 @@ class AuditCheck {
       }
     }
 
+    if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
+      var_dump($output);
+    }
+
     return $output;
   }
 
