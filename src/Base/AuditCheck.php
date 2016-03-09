@@ -112,7 +112,27 @@ class AuditCheck {
   }
 
   /**
-   * Get a single variable over Drush.
+   * Try to find out if a module is enabled or not.
+   *
+   * @param $name
+   * @return bool
+   *   TRUE if the module is enabled, FALSE otherwise (including if the module
+   *   was not found).
+   */
+  public function getModuleStatus($name) {
+    try {
+      $response = $this->executeDrush("pm-info ${name}", ['format' => 'json']);
+      return ! $response->{$name}->status === "not installed";
+    }
+    // The response from Drush can be "No matching variable found.", even with
+    // JSON being requested, which is weird.
+    catch (\Exception $e) {
+      return FALSE;
+    }
+  }
+
+  /**
+   * Get a single variable.
    *
    * @param $name
    * @return mixed
