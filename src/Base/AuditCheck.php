@@ -106,9 +106,16 @@ class AuditCheck {
    * @return mixed
    * @throws \Exception
    */
-  public function getVariable($name) {
-    $response = $this->executeDrush("variable-get ${name}", ['format' => 'json'], ['exact']);
-    return $response->$name;
+  public function getVariable($name, $default = FALSE) {
+    try {
+      $response = $this->executeDrush("variable-get ${name}", ['format' => 'json'], ['exact']);
+      return $response->$name;
+    }
+    // The response from Drush can be "No matching variable found.", even with
+    // JSON being requested, which is weird.
+    catch (\Exception $e) {
+      return $default;
+    }
   }
 
 }
