@@ -7,8 +7,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class SSHCheck extends AuditCheck {
 
+  /**
+   * Generate a full SSH connection string to connect to a webserver and run a
+   * command.
+   *
+   * @param $command
+   * @return string
+   */
   private function generateSSHString($command) {
-    return sprintf("ssh %s -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no %s@%s \"%s\"",
+    return sprintf("ssh %s -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR %s@%s \"%s\"",
       $this->ssh_options,
       $this->remote_user,
       $this->primary_web,
