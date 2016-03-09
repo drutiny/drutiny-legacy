@@ -3,11 +3,13 @@
 namespace SiteAudit\SSH;
 
 use SiteAudit\Base\AuditResponse;
+use SiteAudit\Base\Check;
 
-class ACSFThemeSize extends SSHCheck {
+class ACSFThemeSize extends Check {
   public function check() {
-    $command = "du -ms {$this->root}/{$this->site}/themes/site/";
-    $output = $this->executeSSHCommand($command);
+    $status = $this->context->drush->coreStatus('--format=json')->parseJson();
+    $command = "du -ms {$status->root}/{$status->site}/themes/site/";
+    $output = (string) $this->context->remoteExecutor->execute($command);
 
     // Output from du here is an int followed by space, followed by the full
     // path. We only want the int (size in MB).
@@ -17,10 +19,7 @@ class ACSFThemeSize extends SSHCheck {
     }
     $size_in_mb = (int) $matches[1];
 
-    $max_size = 50;
-    if (isset($this->options['max_size'])) {
-      $max_size = (int) $this->options['max_size'];
-    }
+    $max_size = (int) $this->getOption('max_size', 50);
 
     $response = new AuditResponse();
     $response->setDescription('In Acquia Cloud Site Factory, you should aim to keep your theme repositories as small as possible to avoid exhausting the disk. Having theme repositories less than 50 MB is recommended.');
@@ -32,6 +31,6 @@ class ACSFThemeSize extends SSHCheck {
       $response->setFailure("Theme folder greater than ${max_size} MB, actual size ${size_in_mb} MB");
     }
 
-    $this->output->writeln((string) $response);
+    return $response;
   }
 }

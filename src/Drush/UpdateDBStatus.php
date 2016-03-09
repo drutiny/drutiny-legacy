@@ -2,12 +2,15 @@
 
 namespace SiteAudit\Drush;
 
-use SiteAudit\Base\AuditCheck;
+use SiteAudit\Base\Check;
 use SiteAudit\Base\AuditResponse;
 
-class UpdateDBStatus extends AuditCheck {
+class UpdateDBStatus extends Check {
   public function check() {
-    $output = $this->executeDrush('updatedb-status');
+    $output = $this->context->drush->updatedbStatus()->getOutput();
+    if (count($output) == 1) {
+      $output = $output[0];
+    }
 
     $response = new AuditResponse();
     $response->setDescription("Updates to Drupal core or contrib modules sometimes include important database changes which should be applied after the code updates have been deployed.");
@@ -24,6 +27,6 @@ class UpdateDBStatus extends AuditCheck {
       $response->setFailure("${count} database updates required.");
     }
 
-    $this->output->writeln((string) $response);
+    return $response;
   }
 }
