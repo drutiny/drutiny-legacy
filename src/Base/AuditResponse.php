@@ -6,10 +6,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class AuditResponse {
 
-  const AUDIT_SUCCESS = 3;
-  const AUDIT_WARNING = 2;
-  const AUDIT_FAILURE = 1;
-  const AUDIT_ERROR = 0;
+  const AUDIT_SUCCESS = 0;
+  const AUDIT_WARNING = 1;
+  const AUDIT_FAILURE = 2;
+  const AUDIT_ERROR = 3;
 
   protected $check;
   protected $description;
@@ -29,6 +29,14 @@ class AuditResponse {
       default :
         return '<error>' . $this->message . '</error>';
     }
+  }
+
+  public function getStatus() {
+    return $this->status;
+  }
+
+  public function hasPassed() {
+    return $this->status === self::AUDIT_SUCCESS;
   }
 
   /**

@@ -5,7 +5,9 @@ require __DIR__ . '/vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
 use SiteAudit\Command\SiteAudit;
+use SiteAudit\Command\AcsfAudit;
 
 $application = new Application();
 $application->add(new SiteAudit());
+$application->add(new AcsfAudit());
 $application->run();

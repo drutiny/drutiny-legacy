@@ -50,7 +50,6 @@ class SiteAudit extends Command {
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
     $drush_alias = $input->getArgument('drush-alias');
-    $profile = $input->getOption('profile');
 
     $executor = new Executor($output);
 
@@ -60,9 +59,12 @@ class SiteAudit extends Command {
     $alias = $response[$drush_alias];
     $drush->setAlias($drush_alias);
 
+    $profile = $this->loadProfile($input->getOption('profile'));
+
     $context = new Context();
     $context->set('input', $input)
             ->set('output', $output)
+            ->set('profile', $profile)
             ->set('executor', $executor)
             ->set('remoteExecutor', $executor)
             ->set('drush', $drush)
@@ -75,17 +77,26 @@ class SiteAudit extends Command {
       $executor = new ExecutorRemote($output);
       $executor->setRemoteUser($alias['remote-user'])
                ->setRemoteHost($alias['remote-host']);
+      if (isset($alias['ssh-options'])) {
+        $executor->setArgument($alias['ssh-options']);
+      }
       if ($input->getOption('ssh_options')) {
         $executor->setArgument($input->getOption('ssh_options'));
       }
       $context->set('remoteExecutor', $executor);
     }
 
-    // Ensure we can bootstrap the drush alias, and get the required properties
-    // from the alias. Store these in an object to use in the checks to avoid
-    // duplication.
-    // $core_status = new CoreStatus($drush_alias, $input, $output);
+    $this->runChecks($context);
+  }
 
+  protected function runChecks($context) {
+    foreach ($context->profile['checks'] as $check => $options) {
+      $test = new $check($context, $options);
+      $context->output->writeln((string) $test->check());
+    }
+  }
+
+  protected function loadProfile($profile) {
     // Profiles allow arbitrary checks to run in an arbitrary order. Optional
     // options can be passed in to customise the checks.
     $yaml = dirname(__FILE__) . "/../../profiles/${profile}.yml";
@@ -94,11 +105,7 @@ class SiteAudit extends Command {
     }
     $parser = new Parser();
     $profile = $parser->parse(file_get_contents($yaml));
-    foreach ($profile['checks'] as $check => $options) {
-      //$test = new $check($drush_alias, $input, $output, $options, $core_status);
-      $test = new $check($context, $options);
-      $output->writeln((string) $test->check());
-    }
+    return $profile;
   }
 
 }

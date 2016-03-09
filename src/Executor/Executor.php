@@ -16,7 +16,6 @@ class Executor implements ExecutorInterface {
   public function execute($command) {
 
     if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-      $this->output->writeln('<info>Local command</info>');
       $this->output->writeln($command);
     }
 
