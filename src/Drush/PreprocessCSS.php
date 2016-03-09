@@ -2,12 +2,13 @@
 
 namespace SiteAudit\Drush;
 
-use SiteAudit\Base\AuditCheck;
+use SiteAudit\Base\Check;
 use SiteAudit\Base\AuditResponse;
 
-class PreprocessCss extends AuditCheck {
+class PreprocessCss extends Check {
   public function check() {
-    $output = (int) $this->getVariable('preprocess_css');
+    $json = $this->context->drush->variableGet('preprocess_css', '--exact --format=json')->parseJson(TRUE);
+    $output = (int) $json['preprocess_css'];
 
     $response = new AuditResponse();
     $response->setDescription('With CSS optimization disabled, your website visitors are experiencing slower page performance and the server load is increased.');
@@ -19,6 +20,6 @@ class PreprocessCss extends AuditCheck {
       $response->setFailure('CSS aggregation is not enabled');
     }
 
-    $this->output->writeln((string) $response);
+    return $response;
   }
 }

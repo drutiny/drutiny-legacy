@@ -2,12 +2,13 @@
 
 namespace SiteAudit\Drush;
 
-use SiteAudit\Base\AuditCheck;
+use SiteAudit\Base\Check;
 use SiteAudit\Base\AuditResponse;
 
-class PreprocessJS extends AuditCheck {
+class PreprocessJS extends Check {
   public function check() {
-    $output = (int) $this->getVariable('preprocess_js');
+    $json = $this->context->drush->variableGet('preprocess_js', '--exact --format=json')->parseJson(TRUE);
+    $output = (int) $json['preprocess_js'];
 
     $response = new AuditResponse();
     $response->setDescription('With JavaScript file aggregation disabled, your website visitors are experiencing slower page loads and the server load is increased.');
@@ -19,6 +20,6 @@ class PreprocessJS extends AuditCheck {
       $response->setFailure('JavaScript aggregation is not enabled');
     }
 
-    $this->output->writeln((string) $response);
+    return $response;
   }
 }
