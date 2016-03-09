@@ -14,6 +14,25 @@ Checks are simple classes, that at the moment can either be Drush based checks, 
 
 Drush is required to be installed locally and be available on your path. Drush 8 is recommended. Having a remote-host attribute in the drush alias file is required if you want to run any of the SSH checks.
 
+**A Drush alias for the site**
+
+For every site you want to run the report against, you require a complete drush alias:
+
+```
+<?php
+$aliases['www.example.com'] = array(
+  'uri' => 'www.example.com',
+  'root' => '/var/www/html/docroot',
+  'remote-host' => 'server.example.com',
+  'remote-user' => 'example',
+  'ssh-options' => '-F /dev/null',
+  'path-aliases' => array(
+    '%drush-script' => 'drush6',
+    '%dump-dir' => '/mnt/tmp/',
+  )
+);
+```
+
 **Composer**
 
 Needed to install Symfony Console and related libraries.
