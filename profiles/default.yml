@@ -11,3 +11,4 @@ checks :
   \SiteAudit\Drush\UpdateDBStatus: {}
   \SiteAudit\SSH\HtaccessRedirects :
     max_redirects : 8
+
