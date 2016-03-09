@@ -86,6 +86,14 @@ class AuditCheck {
       throw new \Exception("Drush command failed ($return_var): " . print_r($output, 1));
     }
 
+    // Datetime weirdness.
+    if (strpos($output[0], 'date_timezone_set() expects parameter') === 0) {
+      array_shift($output);
+    }
+    if (strpos($output[0], 'date_format() expects parameter') === 0) {
+      array_shift($output);
+    }
+
     // unwrap output if there is only a single line.
     if (count($output) === 1) {
       $output = current($output);
