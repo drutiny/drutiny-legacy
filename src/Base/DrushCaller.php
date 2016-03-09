@@ -8,6 +8,7 @@ class DrushCaller {
   protected $executor;
 
   protected $alias;
+  protected $args = [];
 
   public function __construct(ExecutorInterface $executor) {
     $this->executor = $executor;
@@ -15,6 +16,11 @@ class DrushCaller {
 
   public function setAlias($alias) {
     $this->alias = $alias;
+    return $this;
+  }
+
+  public function setArgument($arg) {
+    $this->args[] = $arg;
     return $this;
   }
 
@@ -27,6 +33,10 @@ class DrushCaller {
     $command = ['drush'];
     if (!empty($this->alias)) {
       $command[] = '@' . $this->alias;
+    }
+
+    foreach ($this->args as $arg) {
+      $command[] = $arg;
     }
 
     $command[] = $method;
