@@ -65,21 +65,20 @@ class AcsfAudit extends SiteAudit {
 
     $profile = $this->loadProfile($input->getOption('profile'));
 
-    // Ensure we can bootstrap the drush alias, and get the required properties
-    // from the alias. Store these in an object to use in the checks to avoid
-    // duplication.
-    // $core_status = new CoreStatus($drush_alias, $input, $output);
-
-    $site_names = [];
-
+    // The parsed json can contain multiple duplicate site entries due to
+    // site collections. We want to ensure we do not run the checks over the
+    // site collections, but much rather the individual sites.
+    $unique_sites = [];
     foreach ($sites as $domain => $site) {
-
-      // The parsed json can contain multiple entries.
-      if (in_array($site['name'], $site_names)) {
+      if (in_array($site['name'], $unique_sites)) {
         continue;
       }
-      $site_names[] = $site['name'];
+      $unique_sites[$domain] = $site;
+    }
 
+    $output->writeln('<comment>Found ' . count($unique_sites) . ' unqiue sites</comment>');
+
+    foreach ($unique_sites as $domain => $site) {
       $drush = new DrushCaller($executor);
       $drush->setArgument('--uri=' . $domain)
             ->setArgument('--root=' . $alias['root']);
