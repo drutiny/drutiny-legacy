@@ -58,10 +58,28 @@ class DrushCaller {
       $disabled = ($response->{$name}->status === "not installed");
       return !$disabled;
     }
+    catch (\Exception $e) {
+      return FALSE;
+    }
+  }
+
+  /**
+   * Try to return a variable value.
+   *
+   * @param $name
+   *   The name of the variable (exact).
+   * @param int $default
+   *   The value to return if the variable is not set.
+   * @return mixed
+   */
+  public function getVariable($name, $default = 0) {
+    try {
+      return $this->variableGet($name, '--exact --format=json')->parseJson(TRUE);
+    }
     // The response from Drush can be "No matching variable found.", even with
     // JSON being requested, which is weird.
     catch (\Exception $e) {
-      return FALSE;
+      return $default;
     }
   }
 }

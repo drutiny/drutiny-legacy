@@ -13,21 +13,12 @@ class PreprocessCss extends Check {
     $response->setDescription('With CSS optimization disabled, your website visitors are experiencing slower page performance and the server load is increased.');
     $response->setRemediation("Enable CSS optimization on Drupal's Performance page");
 
-    try {
-      $json = $this->context->drush->variableGet('preprocess_css', '--exact --format=json')->parseJson(TRUE);
-      $output = (int) $json;
-      if ($output === 1) {
-        $response->setSuccess('CSS aggregation is enabled');
-      }
-      else {
-        $response->setFailure('CSS aggregation is not enabled');
-      }
+    $enabled = (int) $this->context->drush->getVariable('preprocess_css', 0);
+    if ($enabled) {
+      $response->setSuccess('CSS aggregation is enabled');
     }
-    catch (ResultException $e) {
-      $response->setFailure("Could not determine CSS aggregation setting");
-      if ($this->context->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-        $this->context->output->writeln('<error>' . $e->getMessage() . '</error>');
-      }
+    else {
+      $response->setFailure('CSS aggregation is not enabled');
     }
 
     return $response;
