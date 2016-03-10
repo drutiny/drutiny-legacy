@@ -55,8 +55,8 @@ class AcsfAudit extends SiteAudit {
       if (isset($alias['ssh-options'])) {
         $executor->setArgument($alias['ssh-options']);
       }
-      if ($input->getOption('ssh_options')) {
-        $executor->setArgument($input->getOption('ssh_options'));
+      if ($input->getOption('ssh-options')) {
+        $executor->setArgument($input->getOption('ssh-options'));
       }
     }
 

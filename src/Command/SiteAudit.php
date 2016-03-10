@@ -31,9 +31,9 @@ class SiteAudit extends Command {
         'default'
       )
       ->addOption(
-        'ssh_options',
+        'ssh-options',
         null,
-        InputOption::VALUE_OPTIONAL,
+        InputOption::VALUE_REQUIRED,
         'Passthrough any SSH options directly to SSH.',
         ''
       )
