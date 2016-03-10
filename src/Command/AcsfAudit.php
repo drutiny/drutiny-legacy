@@ -24,7 +24,7 @@ class AcsfAudit extends SiteAudit {
 
     $this
       ->setName('audit:acsf')
-      ->setDescription('Audit all sites on a ACSF instance');
+      ->setDescription('Audit all sites on a Site Factory instance');
   }
 
   /**
@@ -92,7 +92,7 @@ class AcsfAudit extends SiteAudit {
               ->set('remoteExecutor', $executor)
               ->set('drush', $drush);
 
-      $output->writeln('<comment>Running audit over: ' . $domain . '</comment>');
+      $output->writeln("<comment>Running audit over: {$domain}</comment>");
       $results = $this->runChecks($context);
       $pass = 0;
       $failures = [];
