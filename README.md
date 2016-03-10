@@ -41,7 +41,7 @@ Needed to install Symfony Console and related libraries.
 composer install
 ```
 
-## How to run
+## How to run against a single site
 
 Run using the `default` profile (replace [alias] with your drush alias):
 
@@ -62,6 +62,20 @@ php site-audit help audit:site
 ```
 
 In particular, if you use the `-v` argument, then you will see all the drush commands, and SSH commands printed to the screen.
+
+## How to run against an entire Site Factory
+
+Run using the `default` profile (replace [alias] with your drush alias):
+
+```
+php site-audit audit:acsf [alias]
+```
+
+Run a side audit using the `govcms_saas` profile:
+
+```
+php site-audit audit:acsf [alias] --profile=govcms_saas
+```
 
 ## Bash alias
 
