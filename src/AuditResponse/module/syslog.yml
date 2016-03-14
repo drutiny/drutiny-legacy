@@ -1,0 +1,6 @@
+description: "Use the Syslog module instead of the Database logging module to log events and issues. The Syslog module saves website events to your server's syslog (or Windows eventlog)."
+remediation: "Enable Syslog on Drupal's module administration page"
+messages:
+  success: 'Syslog module is enabled'
+  failure: 'Syslog module is disabled'
+  exception: 'The status of the syslog module could not be determined'

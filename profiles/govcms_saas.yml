@@ -9,5 +9,5 @@ checks :
   \SiteAudit\Drush\PageCacheMaximumAge :
     cache : 300
   \SiteAudit\Drush\UpdateDBStatus: {}
-  \SiteAudit\SSH\ACSFThemeSize :
+  \SiteAudit\Check\Acsf\ThemeSize :
     max_size : 50

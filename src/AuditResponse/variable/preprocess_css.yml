@@ -1,0 +1,6 @@
+description: "With CSS optimization disabled, your website visitors are experiencing slower page performance and the server load is increased."
+remediation: "Enable CSS optimization on Drupal's Performance page"
+messages:
+  success: 'CSS aggregation is enabled'
+  failure: 'CSS aggregation is not enabled'
+  exception: 'Could not determine CSS aggregation setting.'
