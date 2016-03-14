@@ -52,7 +52,7 @@ class DrushCaller {
    *   TRUE if the module is enabled, FALSE otherwise (including if the module
    *   was not found).
    */
-  public function getModuleStatus($name) {
+  public function moduleEnabled($name) {
     try {
       $response = $this->pmInfo($name, '--format=json')->parseJson();
       $disabled = ($response->{$name}->status === "not installed");
