@@ -8,7 +8,7 @@ use SiteAudit\Base\CheckInterface;
 abstract class Check implements CheckInterface {
 
   protected $context;
-  protected $options;
+  private $options;
 
   public function __construct(Context $context, Array $options) {
     $this->context = $context;
@@ -17,6 +17,19 @@ abstract class Check implements CheckInterface {
 
   protected function getOption($name, $default = NULL) {
     return empty($this->options[$name]) ? $default : $this->options[$name];
+  }
+
+  protected function setToken($name, $value) {
+    $this->options[$name] = $value;
+    return $this;
+  }
+
+  public function getTokens() {
+    $tokens = [];
+    foreach ($this->options as $key => $value) {
+      $tokens[':' . $key] = $value;
+    }
+    return $tokens;
   }
 
   abstract public function check();

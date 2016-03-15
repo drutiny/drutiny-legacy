@@ -7,7 +7,7 @@ use SiteAudit\AuditResponse\AuditResponse;
 
 class ThemeSize extends Check {
   public function check() {
-    $response = new AuditResponse('acsf/themesize');
+    $response = new AuditResponse('acsf/themesize', $this);
     $context = $this->context;
     $cache = $this->getOption('cache', 300);
     $response->test(function () use ($context, $cache) {

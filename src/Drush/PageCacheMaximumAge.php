@@ -7,13 +7,21 @@ use SiteAudit\AuditResponse\AuditResponse;
 
 class PageCacheMaximumAge extends Check {
   public function check() {
-    $response = new AuditResponse('variable/pagecache');
-    $context = $this->context;
-    $cache = $this->getOption('cache', 300);
-    $response->test(function () use ($context, $cache) {
+    $response = new AuditResponse('variable/pagecache', $this);
+
+    $response->test(function ($check) {
+      $context = $check->context;
       $json = $context->drush->variableGet('page_cache_maximum_age', '--exact --format=json')->parseJson(TRUE);
-      $output = (int) $json['page_cache_maximum_age'];
-      return $output >= $cache;
+      if (is_int($json) || is_string($json)) {
+        $check->setToken('value', $json);
+        return ((int)$json) >= $check->getOption('cache', 300);
+      }
+      elseif (is_array($json)) {
+        $output = (int) $json['page_cache_maximum_age'];
+        $check->setToken('value', $output);
+        return $output >= $check->getOption('cache', 300);
+      }
+      return FALSE;
     });
 
     return $response;

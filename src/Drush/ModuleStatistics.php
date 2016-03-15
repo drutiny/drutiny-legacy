@@ -8,9 +8,10 @@ use SiteAudit\AuditResponse\AuditResponse;
 class ModuleStatistics extends Check {
 
   public function check() {
-    $response = new AuditResponse('module/statistics');
-    $context = $this->context;
-    $response->test(function () use ($context) {
+    $response = new AuditResponse('module/statistics', $this);
+
+    $response->test(function ($check) {
+      $context = $check->context;
       return !$context->drush->moduleEnabled('statistics');
     });
 
