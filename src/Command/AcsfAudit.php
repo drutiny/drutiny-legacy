@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Parser;
+use SiteAudit\AuditResponse\AuditResponse;
 
 class AcsfAudit extends SiteAudit {
 
@@ -55,9 +56,10 @@ class AcsfAudit extends SiteAudit {
       if (isset($alias['ssh-options'])) {
         $executor->setArgument($alias['ssh-options']);
       }
-      if ($input->getOption('ssh-options')) {
-        $executor->setArgument($input->getOption('ssh-options'));
+      try {
+        $executor->setArgument($input->getOption('ssh_options'));
       }
+      catch (InvalidArgumentException $e) {}
     }
 
     $json_data = $executor->execute('cat ' . $acsf_sites_json)->parseJson(TRUE);
@@ -96,17 +98,19 @@ class AcsfAudit extends SiteAudit {
       $pass = 0;
       $failures = [];
       foreach ($results as $result) {
-        if ($result->hasPassed()) {
+        if ($result->getStatus() == AuditResponse::AUDIT_SUCCESS) {
           $pass++;
         }
         else {
-          $failures[] = $result;
+          $failures[] = (string) $result;
         }
       }
       $output->writeln('<info>' . $pass . '/' . count($results) . ' tests passed.</info>');
       foreach ($failures as $fail) {
-        $context->output->writeln((string) $fail);
+        $context->output->writeln("\t" . $fail);
       }
+      $context->output->writeln('----');
+      $context->output->writeln('');
     }
   }
 
