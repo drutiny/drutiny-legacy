@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 
 class SiteAudit extends Command {
 
@@ -31,9 +32,9 @@ class SiteAudit extends Command {
         'default'
       )
       ->addOption(
-        'ssh-options',
+        'ssh_options',
         null,
-        InputOption::VALUE_REQUIRED,
+        InputOption::VALUE_OPTIONAL,
         'Passthrough any SSH options directly to SSH.',
         ''
       )
@@ -80,9 +81,10 @@ class SiteAudit extends Command {
       if (isset($alias['ssh-options'])) {
         $executor->setArgument($alias['ssh-options']);
       }
-      if ($input->getOption('ssh_options')) {
+      try {
         $executor->setArgument($input->getOption('ssh_options'));
       }
+      catch (InvalidArgumentException $e) {}
       $context->set('remoteExecutor', $executor);
     }
 
@@ -95,6 +97,7 @@ class SiteAudit extends Command {
       $context->output->writeln((string) $test->check());
     }
   }
+
 
   protected function loadProfile($profile) {
     // Profiles allow arbitrary checks to run in an arbitrary order. Optional

@@ -9,6 +9,5 @@ checks :
   \SiteAudit\Drush\PageCacheMaximumAge :
     cache : 300
   \SiteAudit\Drush\UpdateDBStatus: {}
-  \SiteAudit\SSH\HtaccessRedirects :
+  \SiteAudit\Ssh\HtaccessRedirects :
     max_redirects : 8
-

@@ -7,7 +7,7 @@ use SiteAudit\AuditResponse\AuditResponse;
 
 class UpdateDBStatus extends Check {
   public function check() {
-    $response = new AuditResponse('system/updatedb');
+    $response = new AuditResponse('system/updatedb', $this);
     $context = $this->context;
     $cache = $this->getOption('cache', 300);
     $response->test(function () use ($context, $cache) {
