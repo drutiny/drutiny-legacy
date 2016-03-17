@@ -1,0 +1,6 @@
+description: 'Check that a set of modules are enabled.'
+remediation: "Enable the modules through the Drupal admin UI or drush en command."
+messages:
+  success: 'All modules (:modules) are enabled.'
+  failure: 'The following modules are not enabled: :not_enabled'
+  exception: 'Could not successfully conduct check for enabled modules'

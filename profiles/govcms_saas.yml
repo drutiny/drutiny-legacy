@@ -1,9 +1,24 @@
 metadata :
   title : 'govCMS SaaS'
 checks :
-  \SiteAudit\Drush\ModulePHP : {}
-  \SiteAudit\Drush\ModuleStatistics : {}
-  \SiteAudit\Drush\ModuleSyslog : {}
+  \SiteAudit\Check\ModuleEnabled:
+    modules:
+      - syslog
+      - govcms_tweaks
+      - acsf
+      - acsf_duplication
+      - acsf_openid
+      - acsf_pingdom
+      - acsf_theme
+      - acsf_variables
+      - acquia_spi
+      - acquia_agent
+  \SiteAudit\Check\ModuleDisabled:
+    modules:
+      - dblog
+      - overlay
+      - php
+      - statistics
   \SiteAudit\Drush\PreprocessCSS : {}
   \SiteAudit\Drush\PreprocessJS : {}
   \SiteAudit\Drush\PageCacheMaximumAge :
