@@ -17,12 +17,17 @@ class Result {
     // Datetime weirdness. Apparently this is caused by theming issues on the
     // remote theme. Why it is being called when executed via CLI is another
     // story.
-    if (isset($output[0])) {
-      if (strpos($output[0], 'date_timezone_set() expects parameter') === 0) {
-        array_shift($output);
-      }
-      if (strpos($output[0], 'date_format() expects parameter') === 0) {
-        array_shift($output);
+    foreach ($output as $key => $value) {
+      $invalid_strings = [
+        'date_timezone_set() expects parameter',
+        'date_format() expects parameter',
+        'common.inc:20',
+        'given common.inc:20',
+      ];
+      foreach ($invalid_strings as $invalid_string) {
+        if (strpos($value, $invalid_string) === 0) {
+          unset($output[$key]);
+        }
       }
     }
 
