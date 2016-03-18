@@ -11,7 +11,7 @@ class PreprocessJS extends Check {
 
     $response->test(function ($check) {
       $context = $check->context;
-      $json = $context->drush->variableGet('preprocess_js', '--exact --format=json')->parseJson(TRUE);
+      $json = $context->drush->getVariable('preprocess_js', 0);
       if (is_int($json)) {
         return $json;
       }
