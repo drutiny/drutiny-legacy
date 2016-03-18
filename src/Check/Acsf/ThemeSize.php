@@ -8,9 +8,9 @@ use SiteAudit\AuditResponse\AuditResponse;
 class ThemeSize extends Check {
   public function check() {
     $response = new AuditResponse('acsf/themesize', $this);
-    $context = $this->context;
-    $cache = $this->getOption('cache', 300);
-    $response->test(function () use ($context, $cache) {
+
+    $response->test(function ($check) {
+      $context = $check->context;
       $status = $context->drush->coreStatus('--format=json')->parseJson();
       $command = "du -ms {$status->root}/{$status->site}/themes/site/";
       $output = (string) $context->remoteExecutor->execute($command);
@@ -22,8 +22,9 @@ class ThemeSize extends Check {
         throw new \Exception('Invalid response from du');
       }
       $size_in_mb = (int) $matches[1];
-
       $max_size = (int) $this->getOption('max_size', 50);
+      $check->setToken('max_size', $max_size);
+      $check->setToken('value', $size_in_mb);
 
       return $size_in_mb < $max_size;
     });

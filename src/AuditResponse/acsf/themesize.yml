@@ -1,6 +1,6 @@
 description: "In Acquia Cloud Site Factory, you should aim to keep your theme repositories as small as possible to avoid exhausting the disk. Having theme repositories less than 50 MB is recommended."
 remediation: "Reduce the number of unneeded files, e.g. PDFs, and PSDs of any initial designs, any node modules SaaS cache files."
 messages:
-  success: 'Theme size on disk is reasonable'
-  failure: 'Theme size on disk is too large. Consider reducing it.'
+  success: 'Theme size is currently smaller than :max_size MB. Actual size is :value MB.'
+  failure: 'Theme size is currently larger than :max_size MB. Actual size is :value MB.'
   exception: 'Could not determine disk usage of theme.'
