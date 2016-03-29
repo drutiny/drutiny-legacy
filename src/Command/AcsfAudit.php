@@ -94,7 +94,7 @@ class AcsfAudit extends SiteAudit {
       $unique_sites[$site['name']] = ['domain' => $domain];
     }
 
-    //$unique_sites = array_slice($unique_sites, 0 , 12, TRUE);
+    //$unique_sites = array_slice($unique_sites, 185 , 8, TRUE);
 
     $output->writeln('<comment>Found ' . count($unique_sites) . ' unqiue sites</comment>');
 
@@ -115,7 +115,7 @@ class AcsfAudit extends SiteAudit {
               ->set('remoteExecutor', $executor)
               ->set('drush', $drush);
 
-      $output->writeln("<comment>Running audit over: {$domain}</comment>");
+      $output->writeln("<comment>[$i] Running audit over: {$domain}</comment>");
       $results = $this->runChecks($context);
       $unique_sites[$id]['results'] = $results;
       $passes = [];
@@ -133,6 +133,7 @@ class AcsfAudit extends SiteAudit {
         }
       }
       $unique_sites[$id]['pass'] = count($passes);
+      $unique_sites[$id]['warn'] = count($warnings);
       $unique_sites[$id]['fail'] = count($failures);
       $output->writeln('<info>' . count($passes) . '/' . count($results) . ' tests passed.</info>');
       foreach ($warnings as $warning) {
@@ -148,7 +149,10 @@ class AcsfAudit extends SiteAudit {
     if ($input->getOption('report-dir')) {
       uasort($unique_sites, function ($a, $b) {
         if ($a['pass'] == $b['pass']) {
-          return 0;
+          if ($a['warn'] == $b['warn']) {
+            return 0;
+          }
+          return ($a['warn'] < $b['warn']) ? -1 : 1;
         }
         return ($a['pass'] < $b['pass']) ? -1 : 1;
       });

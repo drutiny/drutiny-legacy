@@ -73,6 +73,7 @@ class AuditResponse {
         case self::AUDIT_WARNING :
           return '<comment>' . $this->getMessage('warning') . '</comment>';
         case self::AUDIT_FAILURE :
+          return '<error>' . $this->getMessage('failure') . '</error>';
         case self::AUDIT_ERROR :
         default :
           return '<error>' . $this->getMessage('exception') . '</error>';
