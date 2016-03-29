@@ -13,10 +13,7 @@ class PreprocessCss extends Check {
       $context = $check->context;
       $json = $context->drush->getVariable('preprocess_css', 0);
       if (is_int($json)) {
-        return $json;
-      }
-      elseif (is_array($json)) {
-        $output = (int) $json['preprocess_css'];
+        return (bool) $json;
       }
       return FALSE;
     });

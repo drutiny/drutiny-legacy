@@ -1,3 +1,4 @@
+title: 'Module enabled'
 description: 'Check that a set of modules are enabled.'
 remediation: "Enable the modules through the Drupal admin UI or drush en command."
 messages:

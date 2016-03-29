@@ -9,11 +9,11 @@ use SiteAudit\Base\CheckInterface;
 
 class AuditResponse {
 
+  const AUDIT_NA = -1;
   const AUDIT_SUCCESS = 0;
   const AUDIT_WARNING = 1;
   const AUDIT_FAILURE = 2;
   const AUDIT_ERROR = 3;
-  const AUDIT_NA = 4;
 
   protected $profile = [];
 
@@ -36,14 +36,20 @@ class AuditResponse {
 
   public function test(callable $callable) {
     try {
-      switch ($callable($this->check)) {
-        case TRUE:
-          $this->setStatus(self::AUDIT_SUCCESS);
-          break;
+      $result = $callable($this->check);
+      if (is_int($result)) {
+        $this->setStatus($result);
+      }
+      else if (is_bool($result)) {
+        switch ($callable($this->check)) {
+          case TRUE:
+            $this->setStatus(self::AUDIT_SUCCESS);
+            break;
 
-        case FALSE:
-        default:
-          $this->setStatus(self::AUDIT_FAILURE);
+          case FALSE:
+          default:
+            $this->setStatus(self::AUDIT_FAILURE);
+        }
       }
     }
     catch (DoesNotApplyException $e) {
@@ -58,22 +64,29 @@ class AuditResponse {
    * AuditResponse to string.
    */
   public function __toString() {
-    switch ($this->status) {
-      case self::AUDIT_SUCCESS :
-        return '<info>' . $this->getMessage('success') . '</info>';
-      case self::AUDIT_NA :
-        return '<info>' . $this->getMessage('na') . '</info>';
-      case self::AUDIT_FAILURE :
-        return '<comment>' . $this->getMessage('failure') . '</comment>';
-      case self::AUDIT_ERROR :
-      default :
-        return '<error>' . $this->getMessage('exception') . '</error>';
+    try {
+      switch ($this->status) {
+        case self::AUDIT_SUCCESS :
+          return '<info>' . $this->getMessage('success') . '</info>';
+        case self::AUDIT_NA :
+          return '<info>' . $this->getMessage('na') . '</info>';
+        case self::AUDIT_WARNING :
+          return '<comment>' . $this->getMessage('warning') . '</comment>';
+        case self::AUDIT_FAILURE :
+        case self::AUDIT_ERROR :
+        default :
+          return '<error>' . $this->getMessage('exception') . '</error>';
+      }
     }
+    catch (\Exception $e) {
+      var_dump($e->getMessage());
+    }
+    return 'doh';
   }
 
   protected function getMessage($type = 'success') {
     if (!isset($this->profile['messages'][$type])) {
-      throw new \Exception("Cannot format message. Unkonwn type $type.");
+      throw new \Exception("Cannot format message. Unknown type $type.");
     }
     $message = $this->profile['messages'][$type];
     return strtr($message, $this->check->getTokens());
@@ -85,5 +98,9 @@ class AuditResponse {
 
   public function getStatus() {
     return $this->status;
+  }
+
+  public function getTitle() {
+    return $this->profile['title'];
   }
 }

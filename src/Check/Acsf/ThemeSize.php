@@ -33,10 +33,19 @@ class ThemeSize extends Check {
 
       $size_in_mb = (int) $matches[1];
       $max_size = (int) $this->getOption('max_size', 50);
+      $warning_size = (int) $this->getOption('warning_size', 20);
       $check->setToken('max_size', $max_size);
+      $check->setToken('warning_size', $warning_size);
       $check->setToken('value', $size_in_mb);
 
-      return $size_in_mb < $max_size;
+      if ($size_in_mb >= $max_size) {
+        return AuditResponse::AUDIT_FAILURE;
+      }
+      if ($size_in_mb >= $warning_size) {
+        return AuditResponse::AUDIT_WARNING;
+      }
+
+      return AuditResponse::AUDIT_SUCCESS;
     });
 
     return $response;

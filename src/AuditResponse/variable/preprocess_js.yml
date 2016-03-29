@@ -1,3 +1,4 @@
+title: 'JS aggregation'
 description: "With JS optimization disabled, your website visitors are experiencing slower page performance and the server load is increased."
 remediation: "Enable JS optimization on Drupal's Performance page"
 messages:

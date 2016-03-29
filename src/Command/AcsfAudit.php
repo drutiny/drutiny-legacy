@@ -2,7 +2,6 @@
 
 namespace SiteAudit\Command;
 
-use SiteAudit\Base\CoreStatus;
 use SiteAudit\Base\DrushCaller;
 use SiteAudit\Base\Context;
 use SiteAudit\Executor\Executor;
@@ -33,6 +32,11 @@ class AcsfAudit extends SiteAudit {
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
     $drush_alias = $input->getArgument('drush-alias');
+
+    $reports_dir = $input->getOption('report-dir');
+    if (!is_dir($reports_dir) || !is_writeable($reports_dir)) {
+      throw new \RuntimeException("Cannot write to $reports_dir");
+    }
 
     // Load the Drush alias which will contain more information we'll need.
     $executor = new Executor($output);
@@ -76,23 +80,28 @@ class AcsfAudit extends SiteAudit {
       // e.g. ogq621.
       if (array_key_exists($site['name'], $unique_sites)) {
         if (strpos($domain, 'www.') === 0) {
-          $unique_sites[$site['name']] = $domain;
+          $unique_sites[$site['name']] = ['domain' => $domain];
         }
         // Not www but still a custom domain.
-        else if (strpos($domain, 'acsitefactory.com') === FALSE && strpos($unique_sites[$site['name']], 'www.') !== 0) {
-          $unique_sites[$site['name']] = $domain;
+        else if (strpos($domain, 'acsitefactory.com') === FALSE && strpos($unique_sites[$site['name']]['domain'], 'www.') !== 0) {
+          $unique_sites[$site['name']] = ['domain' => $domain];
         }
         else {
           // This domain is not better, so skip it.
           continue;
         }
       }
-      $unique_sites[$site['name']] = $domain;
+      $unique_sites[$site['name']] = ['domain' => $domain];
     }
+
+    //$unique_sites = array_slice($unique_sites, 0 , 12, TRUE);
 
     $output->writeln('<comment>Found ' . count($unique_sites) . ' unqiue sites</comment>');
 
-    foreach ($unique_sites as $id => $domain) {
+    $i = 0;
+    foreach ($unique_sites as $id => $values) {
+      $i++;
+      $domain = $values['domain'];
       $drush = new DrushCaller($executor);
       $drush->setArgument('--uri=' . $domain)
             ->setArgument('--root=' . $alias['root']);
@@ -100,6 +109,7 @@ class AcsfAudit extends SiteAudit {
       $context = new Context();
       $context->set('input', $input)
               ->set('output', $output)
+              ->set('reportsDir', $reports_dir)
               ->set('executor', $executor)
               ->set('profile', $profile)
               ->set('remoteExecutor', $executor)
@@ -107,23 +117,42 @@ class AcsfAudit extends SiteAudit {
 
       $output->writeln("<comment>Running audit over: {$domain}</comment>");
       $results = $this->runChecks($context);
-      $pass = 0;
+      $unique_sites[$id]['results'] = $results;
+      $passes = [];
+      $warnings = [];
       $failures = [];
       foreach ($results as $result) {
         if (in_array($result->getStatus(), [AuditResponse::AUDIT_SUCCESS, AuditResponse::AUDIT_NA], TRUE)) {
-          $pass++;
+          $passes[] = (string) $result;
+        }
+        else if ($result->getStatus() === AuditResponse::AUDIT_WARNING) {
+          $warnings[] = (string) $result;
         }
         else {
           $failures[] = (string) $result;
         }
-
-        $output->writeln((string) $result);
       }
-      $output->writeln('<info>' . $pass . '/' . count($results) . ' tests passed.</info>');
+      $unique_sites[$id]['pass'] = count($passes);
+      $unique_sites[$id]['fail'] = count($failures);
+      $output->writeln('<info>' . count($passes) . '/' . count($results) . ' tests passed.</info>');
+      foreach ($warnings as $warning) {
+        $context->output->writeln("\t" . $warning);
+      }
       foreach ($failures as $fail) {
         $context->output->writeln("\t" . $fail);
       }
       $context->output->writeln('----');
+    }
+
+    // Optional report.
+    if ($input->getOption('report-dir')) {
+      uasort($unique_sites, function ($a, $b) {
+        if ($a['pass'] == $b['pass']) {
+          return 0;
+        }
+        return ($a['pass'] < $b['pass']) ? -1 : 1;
+      });
+      $this->writeReport($reports_dir, $output, $profile, $unique_sites);
     }
   }
 
@@ -135,6 +164,23 @@ class AcsfAudit extends SiteAudit {
       // $context->output->writeln((string) $test->check());
     }
     return $results;
+  }
+
+  protected function writeReport($reports_dir, OutputInterface $output, $profile, Array $unique_sites) {
+    ob_start();
+    include dirname(__FILE__) . '/report/report-acsf.tpl.php';
+    $report_output = ob_get_contents();
+    ob_end_clean();
+
+    $filename = implode('.', [$profile["metadata"]["machine_name"], 'html']);
+    $filepath = $reports_dir . '/' . $filename;
+
+    if (is_file($filepath) && !is_writeable($filepath)) {
+      throw new \RuntimeException("Cannot overwrite file: $filepath");
+    }
+
+    file_put_contents($filepath, $report_output);
+    $output->writeln("<info>Report written to $filepath</info>");
   }
 
 }

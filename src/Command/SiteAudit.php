@@ -2,7 +2,6 @@
 
 namespace SiteAudit\Command;
 
-use SiteAudit\Base\CoreStatus;
 use SiteAudit\Base\DrushCaller;
 use SiteAudit\Base\Context;
 use SiteAudit\Executor\Executor;
@@ -34,9 +33,16 @@ class SiteAudit extends Command {
       ->addOption(
         'ssh_options',
         null,
-        InputOption::VALUE_OPTIONAL,
+        InputOption::VALUE_REQUIRED,
         'Passthrough any SSH options directly to SSH.',
         ''
+      )
+      ->addOption(
+        'report-dir',
+        'd',
+        InputOption::VALUE_REQUIRED,
+        'Set the location where the reports should be written to.',
+        sys_get_temp_dir()
       )
       ->addArgument(
         'drush-alias',
@@ -52,9 +58,13 @@ class SiteAudit extends Command {
   protected function execute(InputInterface $input, OutputInterface $output) {
     $drush_alias = $input->getArgument('drush-alias');
 
-    $executor = new Executor($output);
+    $reports_dir = $input->getOption('report-dir');
+    if (!is_dir($reports_dir) || !is_writeable($reports_dir)) {
+      throw new \RuntimeException("Cannot write to $reports_dir");
+    }
 
     // Load the Drush alias which will contain more information we'll need.
+    $executor = new Executor($output);
     $drush = new DrushCaller($executor);
     $response = $drush->siteAlias('@' . $drush_alias, '--format=json')->parseJson(TRUE);
     $alias = $response[$drush_alias];
@@ -65,6 +75,7 @@ class SiteAudit extends Command {
     $context = new Context();
     $context->set('input', $input)
             ->set('output', $output)
+            ->set('reportsDir', $reports_dir)
             ->set('profile', $profile)
             ->set('executor', $executor)
             ->set('remoteExecutor', $executor)
@@ -97,7 +108,6 @@ class SiteAudit extends Command {
       $context->output->writeln((string) $test->check());
     }
   }
-
 
   protected function loadProfile($profile) {
     // Profiles allow arbitrary checks to run in an arbitrary order. Optional

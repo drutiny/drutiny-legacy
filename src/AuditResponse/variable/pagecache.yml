@@ -1,3 +1,4 @@
+title: 'Page cache'
 description: "Using Pressflow 6 or 7, with a page cache max age set to less than 5 minutes, the server has to frequently regenerate pages which can decrease your site's performance."
 remediation: "Enable page cache max-age on Drupal's Performance page"
 messages:

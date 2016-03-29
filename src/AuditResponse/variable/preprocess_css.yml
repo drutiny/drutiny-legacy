@@ -1,3 +1,4 @@
+title: 'CSS aggregation'
 description: "With CSS optimization disabled, your website visitors are experiencing slower page performance and the server load is increased."
 remediation: "Enable CSS optimization on Drupal's Performance page"
 messages:

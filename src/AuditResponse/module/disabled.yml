@@ -1,3 +1,4 @@
+title: 'Module disabled'
 description: 'Check that a set of modules are disabled.'
 remediation: "Disable the modules through the Drupal admin UI or drush dis command."
 messages:

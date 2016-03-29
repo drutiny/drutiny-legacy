@@ -1,5 +1,7 @@
 metadata :
+  machine_name: 'sabm'
   title : 'SABM'
 checks :
   \SiteAudit\Check\Acsf\ThemeSize :
     max_size : 50
+    warning_size: 20
