@@ -69,18 +69,30 @@ class AcsfAudit extends SiteAudit {
 
     // The parsed json can contain multiple duplicate site entries due to
     // site collections. We want to ensure we do not run the checks over the
-    // site collections, but much rather the individual sites.
+    // site collections, but much rather the individual sites. If possible we
+    // prefer sites that start with the www prefix.
     $unique_sites = [];
     foreach ($sites as $domain => $site) {
-      if (in_array($site['name'], $unique_sites)) {
-        continue;
+      // e.g. ogq621.
+      if (array_key_exists($site['name'], $unique_sites)) {
+        if (strpos($domain, 'www.') === 0) {
+          $unique_sites[$site['name']] = $domain;
+        }
+        // Not www but still a custom domain.
+        else if (strpos($domain, 'acsitefactory.com') === FALSE && strpos($unique_sites[$site['name']], 'www.') !== 0) {
+          $unique_sites[$site['name']] = $domain;
+        }
+        else {
+          // This domain is not better, so skip it.
+          continue;
+        }
       }
-      $unique_sites[$domain] = $site;
+      $unique_sites[$site['name']] = $domain;
     }
 
     $output->writeln('<comment>Found ' . count($unique_sites) . ' unqiue sites</comment>');
 
-    foreach ($unique_sites as $domain => $site) {
+    foreach ($unique_sites as $id => $domain) {
       $drush = new DrushCaller($executor);
       $drush->setArgument('--uri=' . $domain)
             ->setArgument('--root=' . $alias['root']);
@@ -104,6 +116,8 @@ class AcsfAudit extends SiteAudit {
         else {
           $failures[] = (string) $result;
         }
+
+        $output->writeln((string) $result);
       }
       $output->writeln('<info>' . $pass . '/' . count($results) . ' tests passed.</info>');
       foreach ($failures as $fail) {
