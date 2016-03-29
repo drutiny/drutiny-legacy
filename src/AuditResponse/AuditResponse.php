@@ -2,7 +2,7 @@
 
 namespace SiteAudit\AuditResponse;
 
-use Symfony\Component\Console\Output\OutputInterface;
+use SiteAudit\Executor\DoesNotApplyException;
 use Symfony\Component\Yaml\Parser;
 use SiteAudit\Executor\ResultException;
 use SiteAudit\Base\CheckInterface;
@@ -13,6 +13,7 @@ class AuditResponse {
   const AUDIT_WARNING = 1;
   const AUDIT_FAILURE = 2;
   const AUDIT_ERROR = 3;
+  const AUDIT_NA = 4;
 
   protected $profile = [];
 
@@ -31,7 +32,6 @@ class AuditResponse {
     $this->profile = $parser->parse(file_get_contents($filename));
 
     $this->check = $check;
-
   }
 
   public function test(callable $callable) {
@@ -46,6 +46,9 @@ class AuditResponse {
           $this->setStatus(self::AUDIT_FAILURE);
       }
     }
+    catch (DoesNotApplyException $e) {
+      $this->setStatus(self::AUDIT_NA);
+    }
     catch (ResultException $e) {
       $this->setStatus(self::AUDIT_ERROR);
     }
@@ -58,6 +61,8 @@ class AuditResponse {
     switch ($this->status) {
       case self::AUDIT_SUCCESS :
         return '<info>' . $this->getMessage('success') . '</info>';
+      case self::AUDIT_NA :
+        return '<info>' . $this->getMessage('na') . '</info>';
       case self::AUDIT_FAILURE :
         return '<comment>' . $this->getMessage('failure') . '</comment>';
       case self::AUDIT_ERROR :

@@ -4,3 +4,4 @@ messages:
   success: 'Theme size is currently smaller than :max_size MB. Actual size is :value MB.'
   failure: 'Theme size is currently larger than :max_size MB. Actual size is :value MB.'
   exception: 'Could not determine disk usage of theme.'
+  na: 'No custom theme is linked.'

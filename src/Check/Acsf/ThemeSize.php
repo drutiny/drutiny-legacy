@@ -4,6 +4,7 @@ namespace SiteAudit\Check\Acsf;
 
 use SiteAudit\Base\Check;
 use SiteAudit\AuditResponse\AuditResponse;
+use SiteAudit\Executor\DoesNotApplyException;
 
 class ThemeSize extends Check {
   public function check() {
@@ -12,8 +13,16 @@ class ThemeSize extends Check {
     $response->test(function ($check) {
       $context = $check->context;
       $status = $context->drush->coreStatus('--format=json')->parseJson();
-      $command = "du -ms {$status->root}/{$status->site}/themes/site/";
+      $command = "du -ms {$status->root}/{$status->site}/themes/site/ || echo 'nope'";
       $output = (string) $context->remoteExecutor->execute($command);
+
+      // The ACSF site can have no custom theme repo linked, in which case we
+      // will see a "du: cannot access ... No such file or directory" error
+      // response. For now, we force this command to not fail using an or
+      // statement.
+      if (preg_match('/^nope$/', $output)) {
+        throw new DoesNotApplyException();
+      }
 
       // Output from du here is an int followed by space, followed by the full
       // path. We only want the int (size in MB).
@@ -21,6 +30,7 @@ class ThemeSize extends Check {
       if (!isset($matches[1])) {
         throw new \Exception('Invalid response from du');
       }
+
       $size_in_mb = (int) $matches[1];
       $max_size = (int) $this->getOption('max_size', 50);
       $check->setToken('max_size', $max_size);

@@ -98,7 +98,7 @@ class AcsfAudit extends SiteAudit {
       $pass = 0;
       $failures = [];
       foreach ($results as $result) {
-        if ($result->getStatus() == AuditResponse::AUDIT_SUCCESS) {
+        if (in_array($result->getStatus(), [AuditResponse::AUDIT_SUCCESS, AuditResponse::AUDIT_NA], TRUE)) {
           $pass++;
         }
         else {
@@ -110,7 +110,6 @@ class AcsfAudit extends SiteAudit {
         $context->output->writeln("\t" . $fail);
       }
       $context->output->writeln('----');
-      $context->output->writeln('');
     }
   }
 
