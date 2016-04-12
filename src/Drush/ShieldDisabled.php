@@ -11,8 +11,21 @@ class ShieldDisabled extends Check {
 
     $response->test(function ($check) {
       $context = $check->context;
-      $json = (int) $context->drush->getVariable('shield_enabled', 0);
-      return ! (bool) $json;
+
+      // If the module is disabled, then no shield.
+      if ($check->context->drush->moduleEnabled('shield')) {
+        // Shield must be enabled, defaults to on.
+        $shield_enabled = (bool) (int) $context->drush->getVariable('shield_enabled', 1);
+        if ($shield_enabled) {
+          // Shield user must be set.
+          $shield_user = $context->drush->getVariable('shield_user', '');
+          if (!empty($shield_user)) {
+            return FALSE;
+          }
+        }
+      }
+
+      return TRUE;
     });
 
     return $response;
