@@ -55,7 +55,16 @@ class DrushCaller {
   public function moduleEnabled($name) {
     try {
       $response = $this->pmInfo($name, '--format=json')->parseJson();
-      $disabled = ($response->{$name}->status === "not installed");
+
+      // Drush can return with non-JSON responses even though you specify you
+      // want JSON.
+      // e.g. "acsf_openid was not found."
+      if (is_null($response)) {
+        return FALSE;
+      }
+
+      $status = $response->{$name}->status;
+      $disabled = ($status === "not installed" || $status === 'disabled');
       return !$disabled;
     }
     catch (\Exception $e) {
