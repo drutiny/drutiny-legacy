@@ -2,6 +2,7 @@
 
 namespace SiteAudit\Command;
 
+use SiteAudit\AuditResponse\AuditResponse;
 use SiteAudit\Base\DrushCaller;
 use SiteAudit\Base\Context;
 use SiteAudit\Executor\Executor;
@@ -99,14 +100,42 @@ class SiteAudit extends Command {
       $context->set('remoteExecutor', $executor);
     }
 
-    $this->runChecks($context);
+    $results = $this->runChecks($context);
+    $site['domain'] = $alias['uri'];
+    $site['results'] = $results;
+    $passes = [];
+    $warnings = [];
+    $failures = [];
+    foreach ($results as $result) {
+      if (in_array($result->getStatus(), [AuditResponse::AUDIT_SUCCESS, AuditResponse::AUDIT_NA], TRUE)) {
+        $passes[] = (string) $result;
+      }
+      else if ($result->getStatus() === AuditResponse::AUDIT_WARNING) {
+        $warnings[] = (string) $result;
+      }
+      else {
+        $failures[] = (string) $result;
+      }
+    }
+    $site['pass'] = count($passes);
+    $site['warn'] = count($warnings);
+    $site['fail'] = count($failures);
+
+    // Optional report.
+    if ($input->getOption('report-dir')) {
+      $this->writeReport($reports_dir, $output, $profile, $site);
+    }
   }
 
   protected function runChecks($context) {
+    $results = [];
     foreach ($context->profile['checks'] as $check => $options) {
       $test = new $check($context, $options);
-      $context->output->writeln((string) $test->check());
+      $result = $test->check();
+      $results[] = $result;
+      $context->output->writeln((string) $result);
     }
+    return $results;
   }
 
   protected function loadProfile($profile) {
@@ -119,6 +148,23 @@ class SiteAudit extends Command {
     $parser = new Parser();
     $profile = $parser->parse(file_get_contents($yaml));
     return $profile;
+  }
+
+  protected function writeReport($reports_dir, OutputInterface $output, $profile, Array $site) {
+    ob_start();
+    include dirname(__FILE__) . '/report/report-site.tpl.php';
+    $report_output = ob_get_contents();
+    ob_end_clean();
+
+    $filename = implode('.', [$site['domain'], 'html']);
+    $filepath = $reports_dir . '/' . $filename;
+
+    if (is_file($filepath) && !is_writeable($filepath)) {
+      throw new \RuntimeException("Cannot overwrite file: $filepath");
+    }
+
+    file_put_contents($filepath, $report_output);
+    $output->writeln("<info>Report written to $filepath</info>");
   }
 
 }
