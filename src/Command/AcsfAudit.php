@@ -165,7 +165,6 @@ class AcsfAudit extends SiteAudit {
     foreach ($context->profile['checks'] as $check => $options) {
       $test = new $check($context, $options);
       $results[] = $test->check();
-      // $context->output->writeln((string) $test->check());
     }
     return $results;
   }
