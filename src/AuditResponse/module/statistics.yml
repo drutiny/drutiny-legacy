@@ -1,7 +1,0 @@
-title: 'Statistics module'
-description: 'The statistics module tracks page views and logs access statistics for your site. Because it is triggered on every page load it can slow sites down. Consider using a client-side analytics solution (such as Google Analytics) instead.'
-remediation: "Disable Statistics on Drupal's module administration page"
-messages:
-  success: 'Statistics module is disabled'
-  failure: 'Statistics module is enabled'
-  exception: 'The status of the statistics module could not be determined'

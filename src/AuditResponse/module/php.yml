@@ -1,7 +1,0 @@
-title: 'PHP filter'
-description: 'The PHP filter is enabled for your website. While this does not normally represent a serious concern, it does represent a security vulnerability, in that it can allow bad PHP code to be added to your site. This bad code can cause blank pages to appear instead of your site content.'
-remediation: "Disable PHP Filter on Drupal's module administration page"
-messages:
-  success: 'PHP Filter module is disabled'
-  failure: 'PHP Filter module is enabled'
-  exception: 'The status of the php filter module could not be determined'
