@@ -41,7 +41,7 @@ class AuditResponse {
         $this->setStatus($result);
       }
       else if (is_bool($result)) {
-        switch ($callable($this->check)) {
+        switch ($result) {
           case TRUE:
             $this->setStatus(self::AUDIT_SUCCESS);
             break;
