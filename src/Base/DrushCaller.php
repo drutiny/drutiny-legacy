@@ -83,7 +83,11 @@ class DrushCaller {
    */
   public function getVariable($name, $default = 0) {
     try {
-      return $this->variableGet($name, '--exact --format=json')->parseJson(TRUE);
+      $result = $this->variableGet($name, '--exact --format=json')->parseJson(TRUE);
+      if (isset($result[$name])) {
+        return $result[$name];
+      }
+      return $default;
     }
     // The response from Drush can be "No matching variable found.", even with
     // JSON being requested, which is weird.
