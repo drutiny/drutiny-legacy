@@ -8,12 +8,18 @@ use SiteAudit\AuditResponse\AuditResponse;
 class UpdateDBStatus extends Check {
   public function check() {
     $response = new AuditResponse('system/updatedb', $this);
-    $context = $this->context;
-    $cache = $this->getOption('cache', 300);
 
-    $response->test(function () use ($context, $cache) {
+    $response->test(function ($check) {
+      $context = $check->context;
       $output = $context->drush->updatedbStatus()->getOutput();
-      return empty($output);
+      if (count($output) === 1) {
+        $output = reset($output);
+        if (strpos($output, 'No database updates required') === 0) {
+          return TRUE;
+        }
+      }
+
+      return FALSE;
     });
 
     return $response;
