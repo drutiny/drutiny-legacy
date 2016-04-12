@@ -87,6 +87,10 @@ class DrushCaller {
       if (isset($result[$name])) {
         return $result[$name];
       }
+      // Sometimes the result is not an array, so return that.
+      if (is_string($result) || is_int($result)) {
+        return $result;
+      }
       return $default;
     }
     // The response from Drush can be "No matching variable found.", even with
