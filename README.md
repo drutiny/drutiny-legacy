@@ -63,6 +63,12 @@ php site-audit help audit:site
 
 In particular, if you use the `-v` argument, then you will see all the drush commands, and SSH commands printed to the screen.
 
+You can also write the output to a file:
+
+```
+php site-audit audit:site [alias] --profile=govcms_saas --report-dir=/tmp
+```
+
 ## How to run against an entire Site Factory
 
 Run using the `default` profile (replace [alias] with your drush alias):
@@ -75,6 +81,12 @@ Run a side audit using the `govcms_saas` profile:
 
 ```
 php site-audit audit:acsf [alias] --profile=govcms_saas
+```
+
+You can also write the output to a file:
+
+```
+php site-audit audit:acsf [alias] --profile=govcms_saas --report-dir=/tmp
 ```
 
 ## Bash alias
