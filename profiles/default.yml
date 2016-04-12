@@ -2,9 +2,15 @@ metadata :
   machine_name: 'default'
   title : 'Site audit'
 checks :
-  \SiteAudit\Drush\ModulePHP : {}
-  \SiteAudit\Drush\ModuleStatistics : {}
-  \SiteAudit\Drush\ModuleSyslog : {}
+  \SiteAudit\Check\ModuleEnabled:
+    modules:
+      - syslog
+  \SiteAudit\Check\ModuleDisabled:
+    modules:
+      - dblog
+      - overlay
+      - php
+      - statistics
   \SiteAudit\Drush\PreprocessCSS : {}
   \SiteAudit\Drush\PreprocessJS : {}
   \SiteAudit\Drush\PageCacheMaximumAge :

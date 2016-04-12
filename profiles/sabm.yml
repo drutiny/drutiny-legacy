@@ -2,6 +2,28 @@ metadata :
   machine_name: 'sabm'
   title : 'SABM'
 checks :
+  \SiteAudit\Check\ModuleEnabled:
+    modules:
+      - syslog
+      - acsf
+      - acsf_duplication
+      - acsf_openid
+      - acsf_pingdom
+      - acsf_theme
+      - acsf_variables
+      - acquia_spi
+      - acquia_agent
+  \SiteAudit\Check\ModuleDisabled:
+    modules:
+      - dblog
+      - overlay
+      - php
+      - statistics
+  \SiteAudit\Drush\PreprocessCSS : {}
+  \SiteAudit\Drush\PreprocessJS : {}
+  \SiteAudit\Drush\PageCacheMaximumAge :
+    cache : 300
+  \SiteAudit\Drush\UpdateDBStatus: {}
   \SiteAudit\Check\Acsf\ThemeSize :
     max_size : 50
     warning_size: 20
