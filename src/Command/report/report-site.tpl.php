@@ -13,6 +13,20 @@
       padding-top: 50px;
       padding-bottom: 20px;
     }
+    @media print {
+      .table .danger td,
+      .table .danger th {
+        background-color: #f2dede !important;
+      }
+      .table .warning td,
+      .table .warning th {
+        background-color: #fcf8e3 !important;
+      }
+      .table .success td,
+      .table .success th {
+        background-color: #dff0d8 !important;
+      }
+    }
   </style>
 </head>
 <body>
