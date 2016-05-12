@@ -20,6 +20,7 @@ checks :
       - overlay
       - php
       - statistics
+      - update
   \SiteAudit\Drush\PreprocessCSS : {}
   \SiteAudit\Drush\PreprocessJS : {}
   \SiteAudit\Drush\PageCacheMaximumAge :
