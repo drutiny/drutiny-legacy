@@ -24,7 +24,13 @@ class AcsfAudit extends SiteAudit {
 
     $this
       ->setName('audit:acsf')
-      ->setDescription('Audit all sites on a Site Factory instance');
+      ->setDescription('Audit all sites on a Site Factory instance')
+      ->addOption(
+        'www-only',
+        FALSE,
+        InputOption::VALUE_NONE,
+        'If set, only sites with www in the URL will be tested'
+      );
   }
 
   /**
@@ -72,18 +78,23 @@ class AcsfAudit extends SiteAudit {
     $profile = $this->loadProfile($input->getOption('profile'));
 
     // The parsed json can contain multiple duplicate site entries due to
-    // site collections. We want to ensure we do not run the checks over the
-    // site collections, but much rather the individual sites. If possible we
-    // prefer sites that start with the www prefix.
+    // site collections and site clones. We want to ensure we do not run the
+    // checks over the site collections, but much rather the individual sites.
+    // If possible we prefer sites that start with the www prefix.
     $unique_sites = [];
     foreach ($sites as $domain => $site) {
-      // e.g. ogq621.
+      $www_only = $input->getOption('www-only');
+      $is_www = strpos($domain, 'www.') === 0;
+      $is_acsf_domain = strpos($domain, 'acsitefactory.com') !== FALSE;
+
+      // e.g. 'ogq621' or 'net126'.
       if (array_key_exists($site['name'], $unique_sites)) {
-        if (strpos($domain, 'www.') === 0) {
+        if ($is_www) {
           $unique_sites[$site['name']] = ['domain' => $domain];
         }
-        // Not www but still a custom domain.
-        else if (strpos($domain, 'acsitefactory.com') === FALSE && strpos($unique_sites[$site['name']]['domain'], 'www.') !== 0) {
+        // Not www but still a custom domain, only add it if there is a www in
+        // it.
+        else if (!$is_acsf_domain && strpos($unique_sites[$site['name']]['domain'], 'www.') !== 0 && !$www_only) {
           $unique_sites[$site['name']] = ['domain' => $domain];
         }
         else {
@@ -91,9 +102,17 @@ class AcsfAudit extends SiteAudit {
           continue;
         }
       }
-      $unique_sites[$site['name']] = ['domain' => $domain];
+
+      // This is the first time we have seen this domain.
+      else {
+        if ($is_www || !$www_only) {
+          $unique_sites[$site['name']] = ['domain' => $domain];
+        }
+      }
     }
 
+    //var_dump($unique_sites);
+    //$unique_sites = array_slice($unique_sites, 0 , 5, TRUE);
     //$unique_sites = array_slice($unique_sites, 185 , 8, TRUE);
 
     $output->writeln('<comment>Found ' . count($unique_sites) . ' unqiue sites</comment>');
