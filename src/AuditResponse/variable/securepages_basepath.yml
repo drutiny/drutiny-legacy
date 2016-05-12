@@ -1,0 +1,7 @@
+title: 'Securepages basepath'
+description: "The securepages module redirects the user to HTTPS given certain conditions. It is known to cause issues when you redirect to the production domain in all cases (e.g. you are trying to test on a test version of the site)."
+remediation: "Delete the 2 variables securepages_basepath and securepages_basepath_ssl, or set them to a blank string."
+messages:
+  success: 'Securepages basepath is configured correctly'
+  failure: 'Securepages basepath is not configured correctly'
+  exception: 'Could not determine securepages settings.'
