@@ -62,7 +62,7 @@
     <div class="col-sm-12">
       <h2>Sites</h2>
 
-      <table class="table">
+      <table class="table table-bordered">
         <thead>
           <tr>
             <th>Domain</th>
@@ -73,7 +73,7 @@
         </thead>
         <tbody>
           <?php foreach($unique_sites as $id => $site) : ?>
-            <?php foreach($site['results'] as $result) : ?>
+            <?php foreach($site['results'] as $index => $result) : ?>
               <?php
                 $class = "danger";
                 if ($result->getStatus() <= 0) {
@@ -83,11 +83,13 @@
                   $class = "warning";
                 }
               ?>
-              <tr class="<?php print $class; ?>">
-                <td><?php print $site['domain']; ?></td>
-                <td><?php print $id; ?></td>
-                <td><?php print $result->getTitle(); ?></td>
-                <td><?php print $result; ?></td>
+              <tr>
+                <?php if ($index == 0) : ?>
+                  <td rowspan="<?php print count($site['results']); ?>"><?php print $site['domain']; ?></td>
+                  <td rowspan="<?php print count($site['results']); ?>"><?php print $id; ?></td>
+                <?php endif; ?>
+                <td class="<?php print $class; ?>"><?php print $result->getTitle(); ?></td>
+                <td class="<?php print $class; ?>"><?php print $result; ?></td>
               </tr>
             <?php endforeach; ?>
           <?php endforeach; ?>
