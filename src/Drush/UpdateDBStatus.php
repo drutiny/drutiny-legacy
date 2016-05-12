@@ -12,6 +12,11 @@ class UpdateDBStatus extends Check {
     $response->test(function ($check) {
       $context = $check->context;
       $output = $context->drush->updatedbStatus()->getOutput();
+      // Sometimes "No database updates required" is in Stderr, and thus is
+      // empty.
+      if (empty($output)) {
+        return TRUE;
+      }
       if (count($output) === 1) {
         $output = reset($output);
         if (strpos($output, 'No database updates required') === 0) {
