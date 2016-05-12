@@ -10,7 +10,7 @@ class Result {
   public function __construct($command) {
     $output = [];
     $return_val = 0;
-    // Supress StdErr output.
+    // Suppress StdErr output.
     $command .= ' 2> /dev/null';
     exec($command, $output, $return_val);
 
