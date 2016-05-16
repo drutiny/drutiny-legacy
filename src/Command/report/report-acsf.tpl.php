@@ -15,14 +15,17 @@
     }
     @media print {
       .table .danger td,
+      .table td.danger,
       .table .danger th {
         background-color: #f2dede !important;
       }
       .table .warning td,
+      .table td.warning,
       .table .warning th {
         background-color: #fcf8e3 !important;
       }
       .table .success td,
+      .table td.success,
       .table .success th {
         background-color: #dff0d8 !important;
       }
