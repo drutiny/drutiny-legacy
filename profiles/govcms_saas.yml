@@ -26,6 +26,7 @@ checks :
   \SiteAudit\Drush\PageCacheMaximumAge :
     cache : 300
   \SiteAudit\Drush\UpdateDBStatus: {}
+  \SiteAudit\Drush\XMLSiteMapBaseUrl: {}
   \SiteAudit\Check\Acsf\ThemeSize :
     max_size : 50
     warning_size: 20
