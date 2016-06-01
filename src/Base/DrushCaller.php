@@ -64,7 +64,7 @@ class DrushCaller {
       }
 
       $status = $response->{$name}->status;
-      $disabled = ($status === "not installed" || $status === 'disabled');
+      $disabled = in_array($status, ['not installed', 'disabled']);
       return !$disabled;
     }
     catch (\Exception $e) {
