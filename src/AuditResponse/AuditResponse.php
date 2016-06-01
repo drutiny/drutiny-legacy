@@ -21,6 +21,8 @@ class AuditResponse {
 
   protected $status;
 
+  protected $exception;
+
   public function __construct($namespace, CheckInterface $check) {
     $filename = dirname(__FILE__) . '/' . $namespace . '.yml';
 
@@ -57,6 +59,11 @@ class AuditResponse {
     }
     catch (ResultException $e) {
       $this->setStatus(self::AUDIT_ERROR);
+      $this->exception = $e;
+    }
+    catch (\Exception $e) {
+      $this->setStatus(self::AUDIT_ERROR);
+      $this->exception = $e;
     }
   }
 
@@ -90,7 +97,11 @@ class AuditResponse {
       throw new \Exception("Cannot format message. Unknown type $type.");
     }
     $message = $this->profile['messages'][$type];
-    return strtr($message, $this->check->getTokens());
+    $tokens = $this->check->getTokens();
+    if ($type == 'exception') {
+      $tokens[':exception'] = $this->exception->getMessage();
+    }
+    return strtr($message, $tokens);
   }
 
   protected function setStatus($status) {

@@ -14,6 +14,7 @@ checks :
       - acsf_variables
       - acquia_spi
       - acquia_agent
+      - robotstxt
   \SiteAudit\Check\ModuleDisabled:
     modules:
       - dblog
