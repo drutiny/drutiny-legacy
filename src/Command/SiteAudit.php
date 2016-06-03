@@ -133,7 +133,7 @@ class SiteAudit extends Command {
       $test = new $check($context, $options);
       $result = $test->check();
       $results[] = $result;
-      $context->output->writeln((string) $result);
+      $context->output->writeln(strip_tags((string) $result, '<info><comment><error>'));
     }
     return $results;
   }

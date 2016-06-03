@@ -12,7 +12,7 @@ class ModuleEnabled extends Check {
     $response->test(function ($check) {
 
       $modules = $check->getOption('modules');
-      $check->setToken('modules', implode(', ', $modules));
+      $check->setToken('modules', '<code>' . implode('</code>, <code>', $modules) . '</code>');
 
       $not_enabled = [];
       foreach ($modules as $module_name) {
@@ -27,7 +27,7 @@ class ModuleEnabled extends Check {
       }
 
       if (!empty($not_enabled)) {
-        $this->setToken('not_enabled', implode(', ', $not_enabled));
+        $this->setToken('not_enabled', '<code>' . implode('</code>, <code>', $not_enabled) . '</code>');
         return FALSE;
       }
 
