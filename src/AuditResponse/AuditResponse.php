@@ -15,7 +15,7 @@ class AuditResponse {
   const AUDIT_FAILURE = 2;
   const AUDIT_ERROR = 3;
 
-  protected $profile = [];
+  public $profile = [];
 
   protected $check;
 

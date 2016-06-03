@@ -1,7 +1,7 @@
 title: 'Page cache'
-description: "Using Pressflow 6 or 7, with a page cache max age set to less than 5 minutes, the server has to frequently regenerate pages which can decrease your site's performance."
+description: "With a page cache max age set to less than 5 minutes, the server has to frequently regenerate pages which can decrease your site's performance."
 remediation: "Enable page cache max-age on Drupal's Performance page"
 messages:
-  success: 'Page cache max-age is set above :cache seconds. Value set to :value'
-  failure: 'Page cache max-age is not set above :cache seconds. Value set to :value'
+  success: 'Page cache max-age is set above <code>:cache</code> seconds. Value set to <code>:value</code>.'
+  failure: 'Page cache max-age is not set above <code>:cache</code> seconds. Value set to <code>:value</code>.'
   exception: 'Could not determine page cache max-age.'

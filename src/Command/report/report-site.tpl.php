@@ -71,19 +71,31 @@
         </thead>
         <tbody>
           <?php foreach($site['results'] as $result) : ?>
-            <?php
-              $class = "danger";
-              if ($result->getStatus() <= 0) {
-                $class = "success";
-              }
-              else if ($result->getStatus() == 1) {
-                $class = "warning";
-              }
-            ?>
-            <tr class="<?php print $class; ?>">
-              <td><?php print $result->getTitle(); ?></td>
-              <td><?php print $result; ?></td>
-            </tr>
+            <?php if ($result->getStatus() <= 0) : ?>
+              <tr class="success">
+                <th><?php print $result->getTitle(); ?></th>
+                <td><?php print $result; ?></td>
+              </tr>
+            <?php elseif ($result->getStatus() == 1) : ?>
+              <tr class="warning">
+                <th><?php print $result->getTitle(); ?></th>
+                <td><?php print $result; ?></td>
+              </tr>
+            <?php else : ?>
+              <tr class="danger">
+                <th><?php print $result->getTitle(); ?></th>
+                <td>
+                  <p><?php print $result; ?></p>
+                  <p><?php print $result->profile['description']; ?></p>
+                  <div class="panel panel-danger">
+                    <div class="panel-heading">Remediation</div>
+                    <div class="panel-body">
+                      <p><?php print $result->profile['remediation']; ?></p>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            <?php endif ?>
           <?php endforeach; ?>
         </tbody>
       </table>
