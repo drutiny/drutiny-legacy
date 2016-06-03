@@ -25,7 +25,7 @@ class XMLSiteMapBaseUrl extends Check {
 
         $check->setToken('base_url', $base_url);
         $pattern = $this->getOption('pattern', '^https?://.+$');
-        if (!preg_match("#^${pattern}$#", $base_url)) {
+        if (!preg_match("#${pattern}#", $base_url)) {
           return FALSE;
         }
       }
