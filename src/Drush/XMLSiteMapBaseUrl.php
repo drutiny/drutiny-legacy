@@ -24,7 +24,8 @@ class XMLSiteMapBaseUrl extends Check {
         }
 
         $check->setToken('base_url', $base_url);
-        if (!preg_match('#^https://www\.[-a-z]{1,63}\.gov\.au$#', $base_url)) {
+        $pattern = $this->getOption('pattern', '^https?://.+$');
+        if (!preg_match("#^${pattern}$#", $base_url)) {
           return FALSE;
         }
       }
