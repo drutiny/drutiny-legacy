@@ -156,10 +156,10 @@ class AcsfAudit extends SiteAudit {
       $unique_sites[$id]['fail'] = count($failures);
       $output->writeln('<info>' . count($passes) . '/' . count($results) . ' tests passed.</info>');
       foreach ($warnings as $warning) {
-        $context->output->writeln("\t" . $warning);
+        $context->output->writeln("\t" . strip_tags($warning, '<info><comment><error>'));
       }
       foreach ($failures as $fail) {
-        $context->output->writeln("\t" . $fail);
+        $context->output->writeln("\t" . strip_tags($fail, '<info><comment><error>'));
       }
       $context->output->writeln('----');
     }

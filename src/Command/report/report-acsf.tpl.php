@@ -88,8 +88,8 @@
               ?>
               <tr>
                 <?php if ($index == 0) : ?>
-                  <td rowspan="<?php print count($site['results']); ?>"><?php print $site['domain']; ?></td>
-                  <td rowspan="<?php print count($site['results']); ?>"><?php print $id; ?></td>
+                  <th rowspan="<?php print count($site['results']); ?>"><?php print $site['domain']; ?></th>
+                  <th rowspan="<?php print count($site['results']); ?>"><?php print $id; ?></th>
                 <?php endif; ?>
                 <td class="<?php print $class; ?>"><?php print $result->getTitle(); ?></td>
                 <td class="<?php print $class; ?>"><?php print $result; ?></td>
