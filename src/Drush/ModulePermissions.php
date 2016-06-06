@@ -12,16 +12,21 @@ class ModulePermissions extends Check {
     $response->test(function ($check) {
       $context = $check->context;
       $value = $context->drush->moduleEnabled('module_permissions');
-      //If Module Permissions enabled check only admin has permission to list of modules
+      //If Module Permissions enabled check only admin has permission to administer list of modules
       if ($value) {
-        $govcms_roles = $context->drush->getAllRoles();
-        //remove the permission from all roles
-        foreach ($govcms_roles as $role ) {
-          $temp = $context->drush->roleRemovePerm("'".$role['role']."'", "'administer module permissions'");
+        try {
+          $govcms_roles = $context->drush->getAllRoles();
+          //remove the permission from all roles
+          foreach ($govcms_roles as $role ) {
+            $temp = $context->drush->roleRemovePerm("'".$role['role']."'", "'administer module permissions'");
+          }
+          //make sure admin role has the permission
+          $temp = $context->drush->roleAddPerm("'administrator'", "'administer module permissions'");
+          return TRUE;
         }
-        //make sure admin role has the permission
-        $temp = $context->drush->roleAddPerm("'administrator'", "'administer module permissions'");
-        return TRUE;
+        catch (\Exception $e) {
+          return $e;
+        }
       }
 
       return FALSE;
