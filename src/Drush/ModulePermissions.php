@@ -11,25 +11,30 @@ class ModulePermissions extends Check {
 
     $response->test(function ($check) {
       $context = $check->context;
-      $value = $context->drush->moduleEnabled('module_permissions');
       //If Module Permissions enabled check only admin has permission to administer list of modules
-      if ($value) {
-        try {
-          $govcms_roles = $context->drush->getAllRoles();
-          //remove the permission from all roles
-          foreach ($govcms_roles as $role ) {
-            $temp = $context->drush->roleRemovePerm("'".$role['role']."'", "'administer module permissions'");
-          }
-          //make sure admin role has the permission
-          $temp = $context->drush->roleAddPerm("'administrator'", "'administer module permissions'");
-          return TRUE;
-        }
-        catch (\Exception $e) {
-          return $e;
-        }
-      }
+      if ($context->drush->moduleEnabled('module_permissions')) {
+        $permissions = $context->drush->getRolesForPermission('administer module permissions');
+        $roles = $context->drush->getAllRoles();
 
-      return FALSE;
+        foreach ($roles as $role) {
+          if(in_array($role, $permissions)) {
+            // For some reason when running against individual site it has an array key of 'role'
+            // but when running against whole ACSF it has the key of 'label'
+            if(isset($role['role'])) {
+              $the_role = $role['role'];
+            } else {
+              $the_role = $role['label'];
+            }
+            if($the_role !== 'administrator') {
+              return AuditResponse::AUDIT_FAILURE;
+            }
+          }
+        }
+        
+        return AuditResponse::AUDIT_SUCCESS;
+      } else {
+        return AuditResponse::AUDIT_NA;
+      }
     });
 
     return $response;
