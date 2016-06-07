@@ -13,6 +13,7 @@ checks :
       - statistics
   \SiteAudit\Drush\PreprocessCSS : {}
   \SiteAudit\Drush\PreprocessJS : {}
+  \SiteAudit\Drush\ModulePermissions : {}
   \SiteAudit\Drush\PageCacheMaximumAge :
     cache : 300
   \SiteAudit\Drush\UpdateDBStatus: {}

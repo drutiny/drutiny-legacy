@@ -99,4 +99,8 @@ class DrushCaller {
       return $default;
     }
   }
+  
+  public function getAllRoles() {
+    return $this->roleList('--format=json')->parseJson(TRUE);
+  }
 }
