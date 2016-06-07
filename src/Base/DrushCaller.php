@@ -103,4 +103,21 @@ class DrushCaller {
   public function getAllRoles() {
     return $this->roleList('--format=json')->parseJson(TRUE);
   }
+
+  /**
+   * Try to return a list of roles assigned to a permission
+   * 
+   * @param $permission
+   *  The permission name,e.g. 'administer nodes'
+   * 
+   * @return list
+   *  Return a list of roles assigned to the permission
+   */
+  public function getRolesForPermission($permission) {
+    try {
+      return $this->roleList('--format=json --filter=\''.$permission.'\'')->parseJson(TRUE);
+    } catch (\Exception $e) {
+      return NULL;
+    }
+  }
 }
