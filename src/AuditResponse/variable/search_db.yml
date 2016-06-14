@@ -1,0 +1,8 @@
+title: 'Search database'
+description: "Search backed with the database (and not Solr) can cause performance impacts to your site. Often the SQL queries caused but using the database are slow."
+remediation: "Disable <code>search_api_db</code> and then configure search to use Solr."
+messages:
+  na: 'Search is not enabled.'
+  success: 'Search is not using the database.'
+  failure: 'Search is using the database.'
+  exception: 'Could not determine Search settings.'
