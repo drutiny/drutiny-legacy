@@ -61,29 +61,23 @@ abstract class Check {
     try {
       $result = $this->check();
 
-      switch ($result) {
-        case TRUE:
-        case AuditResponse::AUDIT_SUCCESS:
-          $response->setStatus(AuditResponse::AUDIT_SUCCESS);
-          break;
-
-        case AuditResponse::AUDIT_WARNING:
-        case AuditResponse::AUDIT_FAILURE:
-        case AuditResponse::AUDIT_ERROR:
-          $response->setStatus($result);
-          break;
-
-        case FALSE:
-        case AuditResponse::AUDIT_FAILURE:
-          $response->setStatus(AuditResponse::AUDIT_FAILURE);
-          break;
-
-        case AuditResponse::AUDIT_NA:
-        default:
-          $response->setStatus(AuditResponse::AUDIT_NA);
-          break;
-
+      // All constants are integers, check for them first.
+      if (is_int($result)) {
+        $response->setStatus($result);
       }
+      // Booleans can also be used.
+      else {
+        switch ($result) {
+          case TRUE:
+            $response->setStatus(AuditResponse::AUDIT_SUCCESS);
+            break;
+
+          case FALSE:
+            $response->setStatus(AuditResponse::AUDIT_FAILURE);
+            break;
+        }
+      }
+
     }
     catch (DoesNotApplyException $e) {
       $response->setStatus(AuditResponse::AUDIT_NA);
