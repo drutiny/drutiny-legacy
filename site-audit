@@ -4,10 +4,11 @@
 require __DIR__ . '/vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
-use SiteAudit\Command\SiteAudit;
-use SiteAudit\Command\AcsfAudit;
+use SiteAudit\Command;
 
 $application = new Application();
-$application->add(new SiteAudit());
-$application->add(new AcsfAudit());
+$application->add(new Command\SiteAudit());
+$application->add(new Command\AcsfAudit());
+$application->add(new Command\ChecksCommand());
+$application->add(new Command\ProfileCreateCommand());
 $application->run();

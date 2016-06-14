@@ -3,7 +3,8 @@
 namespace SiteAudit\Command;
 
 use SiteAudit\Base\DrushCaller;
-use SiteAudit\Base\Context;
+use SiteAudit\Context;
+use SiteAudit\Profile\Profile;
 use SiteAudit\Executor\Executor;
 use SiteAudit\Executor\ExecutorRemote;
 use Symfony\Component\Console\Command\Command;
@@ -75,7 +76,8 @@ class AcsfAudit extends SiteAudit {
     $json_data = $executor->execute('cat ' . $acsf_sites_json)->parseJson(TRUE);
     $sites = $json_data['sites'];
 
-    $profile = $this->loadProfile($input->getOption('profile'));
+    $profile = new Profile();
+    $profile->load($input->getOption('profile'));
 
     // The parsed json can contain multiple duplicate site entries due to
     // site collections and site clones. We want to ensure we do not run the
@@ -181,9 +183,9 @@ class AcsfAudit extends SiteAudit {
 
   protected function runChecks($context) {
     $results = [];
-    foreach ($context->profile['checks'] as $check => $options) {
+    foreach ($context->profile->getChecks() as $check => $options) {
       $test = new $check($context, $options);
-      $results[] = $test->check();
+      $results[] = $test->execute();
     }
     return $results;
   }
