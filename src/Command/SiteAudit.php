@@ -131,7 +131,7 @@ class SiteAudit extends Command {
     $results = [];
     foreach ($context->profile['checks'] as $check => $options) {
       $test = new $check($context, $options);
-      $result = $test->check();
+      $result = $test->execute();
       $results[] = $result;
       $context->output->writeln(strip_tags((string) $result, '<info><comment><error>'));
     }

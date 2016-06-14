@@ -1,10 +1,13 @@
 metadata :
-  machine_name: 'default'
-  title : 'Site audit'
+  title : 'HSF'
 checks :
   \SiteAudit\Check\Drush\ModuleEnabled:
     modules:
       - syslog
+      - seckit
+      - acquia_spi
+      - acquia_agent
+      - securepages
   \SiteAudit\Check\Drush\ModuleDisabled:
     modules:
       - dblog
@@ -13,9 +16,6 @@ checks :
       - statistics
   \SiteAudit\Check\Drush\PreprocessCSS : {}
   \SiteAudit\Check\Drush\PreprocessJS : {}
-  \SiteAudit\Check\Drush\ModulePermissions : {}
   \SiteAudit\Check\Drush\PageCacheMaximumAge :
     cache : 300
-  \SiteAudit\Check\Drush\UpdateDBStatus: {}
-  \SiteAudit\Check\HtaccessRedirects :
-    max_redirects : 8
+  \SiteAudit\Check\Drush\CronHasRun: {}

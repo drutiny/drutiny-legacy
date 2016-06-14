@@ -3,7 +3,7 @@
 namespace SiteAudit\Command;
 
 use SiteAudit\Base\DrushCaller;
-use SiteAudit\Base\Context;
+use SiteAudit\Context;
 use SiteAudit\Executor\Executor;
 use SiteAudit\Executor\ExecutorRemote;
 use Symfony\Component\Console\Command\Command;
@@ -183,7 +183,7 @@ class AcsfAudit extends SiteAudit {
     $results = [];
     foreach ($context->profile['checks'] as $check => $options) {
       $test = new $check($context, $options);
-      $results[] = $test->check();
+      $results[] = $test->execute();
     }
     return $results;
   }
