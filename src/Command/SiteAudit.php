@@ -4,7 +4,7 @@ namespace SiteAudit\Command;
 
 use SiteAudit\AuditResponse\AuditResponse;
 use SiteAudit\Base\DrushCaller;
-use SiteAudit\Base\Context;
+use SiteAudit\Context;
 use SiteAudit\Executor\Executor;
 use SiteAudit\Executor\ExecutorRemote;
 use Symfony\Component\Console\Command\Command;
