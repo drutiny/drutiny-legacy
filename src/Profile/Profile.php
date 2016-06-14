@@ -76,7 +76,7 @@ class Profile
    */
   public function getChecks()
   {
-    return array_keys($this->checks);
+    return $this->checks;
   }
 
   public function save()
@@ -92,6 +92,9 @@ class Profile
 
   public function load($machine_name)
   {
+    if (!file_exists($this->getFilepath($machine_name))) {
+      return FALSE;
+    }
     $yaml = file_get_contents($this->getFilepath($machine_name));
     $data = Yaml::parse($yaml);
     $this->setTitle($data['title'])

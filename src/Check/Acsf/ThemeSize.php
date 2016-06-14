@@ -15,7 +15,7 @@ class ThemeSize extends Check {
 
   public function check()
   {
-    $context = $check->context;
+    $context = $this->context;
     $status = $context->drush->coreStatus('--format=json')->parseJson();
     $command = "du -ms {$status->root}/{$status->site}/themes/site/ || echo 'nope'";
     $output = (string) $context->remoteExecutor->execute($command);
@@ -38,9 +38,9 @@ class ThemeSize extends Check {
     $size_in_mb = (int) $matches[1];
     $max_size = (int) $this->getOption('max_size', 50);
     $warning_size = (int) $this->getOption('warning_size', 20);
-    $check->setToken('max_size', $max_size);
-    $check->setToken('warning_size', $warning_size);
-    $check->setToken('value', $size_in_mb);
+    $this->setToken('max_size', $max_size);
+    $this->setToken('warning_size', $warning_size);
+    $this->setToken('value', $size_in_mb);
 
     if ($size_in_mb >= $max_size) {
       return AuditResponse::AUDIT_FAILURE;

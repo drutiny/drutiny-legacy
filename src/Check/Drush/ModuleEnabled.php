@@ -14,6 +14,9 @@ class ModuleEnabled extends Check {
   public function check()
   {
     $modules = $this->getOption('modules');
+    if (empty($modules)) {
+      return TRUE;
+    }
     $this->setToken('modules', '<code>' . implode('</code>, <code>', $modules) . '</code>');
 
     $not_enabled = [];

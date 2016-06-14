@@ -7,6 +7,7 @@ use SiteAudit\Base\DrushCaller;
 use SiteAudit\Context;
 use SiteAudit\Executor\Executor;
 use SiteAudit\Executor\ExecutorRemote;
+use SiteAudit\Profile\Profile;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,7 +27,7 @@ class SiteAudit extends Command {
       ->setDescription('Audit a Drupal site to ensure it meets best practice')
       ->addOption(
         'profile',
-        null,
+        'p',
         InputOption::VALUE_REQUIRED,
         'What site audit profile do you want to use?',
         'default'
@@ -71,7 +72,8 @@ class SiteAudit extends Command {
     $alias = $response[$drush_alias];
     $drush->setAlias($drush_alias);
 
-    $profile = $this->loadProfile($input->getOption('profile'));
+    $profile = new Profile();
+    $profile->load($input->getOption('profile'));
 
     $context = new Context();
     $context->set('input', $input)
@@ -129,25 +131,13 @@ class SiteAudit extends Command {
 
   protected function runChecks($context) {
     $results = [];
-    foreach ($context->profile['checks'] as $check => $options) {
+    foreach ($context->profile->getChecks() as $check => $options) {
       $test = new $check($context, $options);
       $result = $test->execute();
       $results[] = $result;
       $context->output->writeln(strip_tags((string) $result, '<info><comment><error>'));
     }
     return $results;
-  }
-
-  protected function loadProfile($profile) {
-    // Profiles allow arbitrary checks to run in an arbitrary order. Optional
-    // options can be passed in to customise the checks.
-    $yaml = dirname(__FILE__) . "/../../profiles/${profile}.yml";
-    if (!file_exists($yaml)) {
-      throw new \Exception('missing profile YAML');
-    }
-    $parser = new Parser();
-    $profile = $parser->parse(file_get_contents($yaml));
-    return $profile;
   }
 
   protected function writeReport($reports_dir, OutputInterface $output, $profile, Array $site) {
