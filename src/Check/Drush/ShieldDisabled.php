@@ -5,7 +5,7 @@ namespace SiteAudit\Check\Drush;
 use SiteAudit\Check\Check;
 
 class ShieldDisabled extends Check {
-  protected function getNamespace()
+  static public function getNamespace()
   {
     return 'variable/shield_disabled';
   }

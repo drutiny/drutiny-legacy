@@ -6,7 +6,7 @@ use SiteAudit\Check\Check;
 use SiteAudit\Executor\DoesNotApplyException;
 
 class XMLSiteMapBaseUrl extends Check {
-  protected function getNamespace()
+  static public function getNamespace()
   {
     return 'variable/xmlsitemap_base_url';
   }

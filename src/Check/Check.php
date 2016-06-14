@@ -44,7 +44,10 @@ abstract class Check {
   /**
    * The namespace AuditReponse should use to discover a .yml file for check.
    */
-  abstract protected function getNamespace();
+  static public function getNamespace()
+  {
+    return 'not/available';
+  }
 
   /**
    * Execute the check in a sandbox.
@@ -53,7 +56,7 @@ abstract class Check {
    */
   public function execute()
   {
-    $response = new AuditResponse($this->getNamespace(), $this);
+    $response = new AuditResponse(self::getNamespace(), $this);
 
     try {
       $result = $this->check();

@@ -6,7 +6,7 @@ use SiteAudit\Check\Check;
 
 class ModuleEnabled extends Check {
 
-  protected function getNamespace()
+  static public function getNamespace()
   {
     return 'module/enabled';
   }

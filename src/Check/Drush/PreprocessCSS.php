@@ -5,7 +5,7 @@ namespace SiteAudit\Check\Drush;
 use SiteAudit\Check\Check;
 
 class PreprocessCss extends Check {
-  protected function getNamespace()
+  static public function getNamespace()
   {
     return 'variable/pagecache';
   }

@@ -5,7 +5,7 @@ namespace SiteAudit\Check\Drush;
 use SiteAudit\Check\Check;
 
 class PreprocessJS extends Check {
-  protected function getNamespace()
+  static public function getNamespace()
   {
     return 'variable/preprocess_js';
   }

@@ -6,7 +6,7 @@ use SiteAudit\Check\Check;
 use SiteAudit\AuditResponse\AuditResponse;
 
 class ModulePermissions extends Check {
-  protected function getNamespace()
+  static public function getNamespace()
   {
     return 'variable/module_permissions';
   }

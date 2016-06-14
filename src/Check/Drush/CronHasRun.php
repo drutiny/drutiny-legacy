@@ -6,7 +6,7 @@ use SiteAudit\Check\Check;
 
 class CronHasRun extends Check {
 
-  protected function getNamespace()
+  static public function getNamespace()
   {
     return 'system/cron_has_run';
   }

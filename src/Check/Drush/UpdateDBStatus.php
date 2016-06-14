@@ -5,7 +5,7 @@ namespace SiteAudit\Check\Drush;
 use SiteAudit\Check\Check;
 
 class UpdateDBStatus extends Check {
-  protected function getNamespace()
+  static public function getNamespace()
   {
     return 'system/updatedb';
   }

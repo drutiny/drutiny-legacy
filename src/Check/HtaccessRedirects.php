@@ -3,7 +3,7 @@
 namespace SiteAudit\Check;
 
 class HtaccessRedirects extends Check {
-  protected function getNamespace()
+  static public function getNamespace()
   {
     return 'system/htaccess_redirects';
   }

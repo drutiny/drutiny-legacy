@@ -6,7 +6,7 @@ use SiteAudit\Check\Check;
 use SiteAudit\Executor\DoesNotApplyException;
 
 class Search404 extends Check {
-  protected function getNamespace()
+  static public function getNamespace()
   {
     return 'variable/search_404';
   }

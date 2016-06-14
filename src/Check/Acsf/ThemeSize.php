@@ -2,13 +2,13 @@
 
 namespace SiteAudit\Check\Acsf;
 
-use SiteAudit\Base\Check;
+use SiteAudit\Check\Check;
 use SiteAudit\AuditResponse\AuditResponse;
 use SiteAudit\Executor\DoesNotApplyException;
 
 class ThemeSize extends Check {
-  
-  protected function getNamespace()
+
+  static public function getNamespace()
   {
     return 'acsf/themesize';
   }
