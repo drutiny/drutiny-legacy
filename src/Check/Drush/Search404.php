@@ -10,15 +10,15 @@ class Search404 extends Check {
   {
     return 'variable/search_404';
   }
-  public function check() {
-    $context = $this->context;
 
+  public function check()
+  {
     // If the module is disabled, then no search404.
     if ($this->context->drush->moduleEnabled('search404')) {
 
       // There is a variable that can skip automatic searching, which is
       // desirable from a performance perspective.
-      $skip_auto_search = (bool) $context->drush->getVariable('search404_skip_auto_search', FALSE);
+      $skip_auto_search = (bool) $this->context->drush->getVariable('search404_skip_auto_search', FALSE);
       if (!$skip_auto_search) {
         return FALSE;
       }

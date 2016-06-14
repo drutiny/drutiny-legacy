@@ -9,10 +9,10 @@ class PreprocessCss extends Check {
   {
     return 'variable/pagecache';
   }
+  
   public function check()
   {
-    $context = $this->context;
-    $json = (int) $context->drush->getVariable('preprocess_css', 0);
+    $json = (int) $this->context->drush->getVariable('preprocess_css', 0);
     return (bool) $json;
   }
 }

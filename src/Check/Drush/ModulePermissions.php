@@ -13,17 +13,17 @@ class ModulePermissions extends Check {
 
   public function check()
   {
-    $context = $this->context;
-    //If Module Permissions enabled check only admin has permission to administer list of modules
-    if ($context->drush->moduleEnabled('module_permissions')) {
-      $permissions = $context->drush->getRolesForPermission('administer module permissions');
-      $roles = $context->drush->getAllRoles();
+    // If Module Permissions enabled check only admin has permission to
+    // administer list of modules.
+    if ($this->context->drush->moduleEnabled('module_permissions')) {
+      $permissions = $this->context->drush->getRolesForPermission('administer module permissions');
+      $roles = $this->context->drush->getAllRoles();
 
       foreach ($roles as $role) {
-        if(in_array($role, $permissions)) {
+        if (in_array($role, $permissions)) {
           // For some reason when running against individual site it has an array key of 'role'
-          // but when running against whole ACSF it has the key of 'label'
-          if(isset($role['role'])) {
+          // but when running against whole ACSF it has the key of 'label'.
+          if (isset($role['role'])) {
             $the_role = $role['role'];
           } else {
             $the_role = $role['label'];

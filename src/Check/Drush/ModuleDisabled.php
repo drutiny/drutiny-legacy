@@ -10,7 +10,6 @@ class ModuleDisabled extends Check {
     return 'module/disabled';
   }
 
-
   public function check() {
     $modules = $this->getOption('modules');
     if (empty($modules)) {
