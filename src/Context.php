@@ -1,6 +1,6 @@
 <?php
 
-namespace SiteAudit\Base;
+namespace SiteAudit;
 
 class Context {
   protected $contexts = [];

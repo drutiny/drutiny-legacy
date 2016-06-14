@@ -2,10 +2,10 @@
 
 namespace SiteAudit\AuditResponse;
 
-use SiteAudit\Executor\DoesNotApplyException;
 use Symfony\Component\Yaml\Parser;
+use SiteAudit\Executor\DoesNotApplyException;
 use SiteAudit\Executor\ResultException;
-use SiteAudit\Base\CheckInterface;
+use SiteAudit\Check\Check;
 
 class AuditResponse {
 
@@ -21,9 +21,9 @@ class AuditResponse {
 
   protected $status;
 
-  protected $exception;
+  public $exception;
 
-  public function __construct($namespace, CheckInterface $check) {
+  public function __construct($namespace, Check $check) {
     $filename = dirname(__FILE__) . '/' . $namespace . '.yml';
 
     if (!file_exists($filename)) {
@@ -34,37 +34,6 @@ class AuditResponse {
     $this->profile = $parser->parse(file_get_contents($filename));
 
     $this->check = $check;
-  }
-
-  public function test(callable $callable) {
-    try {
-      $result = $callable($this->check);
-      if (is_int($result)) {
-        $this->setStatus($result);
-      }
-      else if (is_bool($result)) {
-        switch ($result) {
-          case TRUE:
-            $this->setStatus(self::AUDIT_SUCCESS);
-            break;
-
-          case FALSE:
-          default:
-            $this->setStatus(self::AUDIT_FAILURE);
-        }
-      }
-    }
-    catch (DoesNotApplyException $e) {
-      $this->setStatus(self::AUDIT_NA);
-    }
-    catch (ResultException $e) {
-      $this->setStatus(self::AUDIT_ERROR);
-      $this->exception = $e;
-    }
-    catch (\Exception $e) {
-      $this->setStatus(self::AUDIT_ERROR);
-      $this->exception = $e;
-    }
   }
 
   /**
@@ -104,7 +73,7 @@ class AuditResponse {
     return strtr($message, $tokens);
   }
 
-  protected function setStatus($status) {
+  public function setStatus($status) {
     $this->status = $status;
   }
 
