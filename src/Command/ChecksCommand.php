@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\ClassLoader\ClassMapGenerator;
 use Symfony\Component\Console\Helper\Table;
-use SiteAudit\Check\Check;
+use SiteAudit\Check\Registry;
 
 
 class ChecksCommand extends Command {
@@ -27,8 +27,7 @@ class ChecksCommand extends Command {
    */
   protected function execute(InputInterface $input, OutputInterface $output)
   {
-    $checkDir = realpath(__DIR__ . '/../Check');
-    $map = ClassMapGenerator::createMap($checkDir);
+    $map = Registry::load();
 
     $checks = array();
     foreach ($map as $class => $filepath) {

@@ -10,4 +10,5 @@ $application = new Application();
 $application->add(new Command\SiteAudit());
 $application->add(new Command\AcsfAudit());
 $application->add(new Command\ChecksCommand());
+$application->add(new Command\ProfileCreateCommand());
 $application->run();
