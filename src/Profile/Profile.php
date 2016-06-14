@@ -81,8 +81,8 @@ class Profile
 
   public function save()
   {
-    $data['title'] = $this->getTitle();
-    $data['machine_name'] = $this->getMachineName();
+    $data['metadata']['title'] = $this->getTitle();
+    $data['metadata']['machine_name'] = $this->getMachineName();
     $data['checks'] = $this->checks;
 
     $yaml = Yaml::dump($data);
@@ -97,8 +97,8 @@ class Profile
     }
     $yaml = file_get_contents($this->getFilepath($machine_name));
     $data = Yaml::parse($yaml);
-    $this->setTitle($data['title'])
-         ->setMachineName($data['machine_name']);
+    $this->setTitle($data['metadata']['title'])
+         ->setMachineName($data['metadata']['machine_name']);
     $this->checks = $data['checks'];
   }
 
