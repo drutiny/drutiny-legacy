@@ -1,0 +1,26 @@
+metadata :
+  machine_name: 'iag'
+  title : 'IAG'
+checks :
+  \SiteAudit\Check\Drush\ModuleEnabled:
+    modules:
+      - syslog
+      - acquia_spi
+      - acquia_agent
+  \SiteAudit\Check\Drush\ModuleDisabled:
+    modules:
+      - dblog
+      - overlay
+      - php
+      - statistics
+      - update
+  \SiteAudit\Check\Drush\PreprocessCSS : {}
+  \SiteAudit\Check\Drush\PreprocessJS : {}
+  \SiteAudit\Check\Drush\PageCacheMaximumAge :
+    cache : 300
+  \SiteAudit\Check\Drush\UpdateDBStatus: {}
+  \SiteAudit\Check\Drush\Search404: {}
+  \SiteAudit\Check\Drush\SearchDB: {}
+  \SiteAudit\Check\Drush\CronHasRun: {}
+  \SiteAudit\Check\Drush\XMLSiteMapBaseUrl:
+    pattern : '^https?://[-a-z]{1,63}\.[-a-z]{1,63}\.com\.au$'
