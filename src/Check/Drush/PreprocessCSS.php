@@ -7,9 +7,9 @@ use SiteAudit\Check\Check;
 class PreprocessCss extends Check {
   static public function getNamespace()
   {
-    return 'variable/pagecache';
+    return 'variable/preprocess_css';
   }
-  
+
   public function check()
   {
     $json = (int) $this->context->drush->getVariable('preprocess_css', 0);
