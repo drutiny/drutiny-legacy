@@ -196,7 +196,7 @@ class AcsfAudit extends SiteAudit {
     $report_output = ob_get_contents();
     ob_end_clean();
 
-    $filename = implode('.', [$profile["metadata"]["machine_name"], 'html']);
+    $filename = implode('.', [$profile->getMachineName(), 'html']);
     $filepath = $reports_dir . '/' . $filename;
 
     if (is_file($filepath) && !is_writeable($filepath)) {
