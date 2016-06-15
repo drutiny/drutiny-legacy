@@ -89,10 +89,27 @@ You can also write the output to a file:
 php site-audit audit:acsf [alias] --profile=govcms_saas --report-dir=/tmp
 ```
 
-## Bash alias
 
-This could be helpful if you want to be able to run the command from anywhere
+## How to run against sites in a multisite
+
+You first need to create a domains file that lists all domains you want to run an audit against. An example is provided with `domains-example.yml` to which you can copy and make you own version:
 
 ```
-alias sa='php /path/to/site-audit audit:site'
+cp domains{-example,}.yml
+```
+
+Run using the `govcms_saas` profile (replace [alias] with your drush alias):
+
+```
+php site-audit audit:multisite [alias] --profile=govcms_saas --report-dir=/tmp --domain-file=domains.yml
+```
+
+## Bash aliases
+
+This could be helpful if you want to be able to run the command from anywhere:
+
+```
+alias as='php /path/to/site-audit audit:site'
+alias aa='php /path/to/site-audit audit:acsf'
+alias am='php /path/to/site-audit audit:multisite'
 ```
