@@ -8,6 +8,7 @@ class DrushCaller {
   protected $executor;
 
   protected $alias;
+  protected $modulesList = NULL;
   protected $args = [];
 
   public function __construct(ExecutorInterface $executor) {
@@ -54,18 +55,18 @@ class DrushCaller {
    */
   public function moduleEnabled($name) {
     try {
-      $response = $this->pmInfo($name, '--format=json')->parseJson();
-
-      // Drush can return with non-JSON responses even though you specify you
-      // want JSON.
-      // e.g. "acsf_openid was not found."
-      if (is_null($response)) {
-        return FALSE;
+      // First time this is run, refresh the module list.
+      if (is_null($this->modulesList)) {
+        $this->modulesList = $this->pmList('--format=json')->parseJson();
       }
 
-      $status = $response->{$name}->status;
-      $disabled = in_array($status, ['not installed', 'disabled']);
-      return !$disabled;
+      if (isset($this->modulesList->{$name})) {
+        $status = $this->modulesList->{$name}->status;
+        return ($status === "Enabled");
+      }
+
+      // Module is not in the codebase.
+      return FALSE;
     }
     catch (\Exception $e) {
       return FALSE;
@@ -99,17 +100,17 @@ class DrushCaller {
       return $default;
     }
   }
-  
+
   public function getAllRoles() {
     return $this->roleList('--format=json')->parseJson(TRUE);
   }
 
   /**
    * Try to return a list of roles assigned to a permission
-   * 
+   *
    * @param $permission
    *  The permission name,e.g. 'administer nodes'
-   * 
+   *
    * @return list
    *  Return a list of roles assigned to the permission
    */
