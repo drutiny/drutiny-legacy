@@ -85,7 +85,7 @@ class DrushCaller {
    */
   public function getVariable($name, $default = 0) {
     try {
-      // First time this is run, refresh the module list.
+      // First time this is run, refresh the variable list.
       if (is_null($this->variablesList)) {
         $this->variablesList = $this->variableGet('--format=json')->parseJson();
       }
