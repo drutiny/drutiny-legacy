@@ -9,6 +9,7 @@ class DrushCaller {
 
   protected $alias;
   protected $modulesList = NULL;
+  protected $variablesList = NULL;
   protected $args = [];
 
   public function __construct(ExecutorInterface $executor) {
@@ -84,14 +85,15 @@ class DrushCaller {
    */
   public function getVariable($name, $default = 0) {
     try {
-      $result = $this->variableGet($name, '--exact --format=json')->parseJson(TRUE);
-      if (isset($result[$name])) {
-        return $result[$name];
+      // First time this is run, refresh the module list.
+      if (is_null($this->variablesList)) {
+        $this->variablesList = $this->variableGet('--format=json')->parseJson();
       }
-      // Sometimes the result is not an array, so return that.
-      if (is_string($result) || is_int($result)) {
-        return $result;
+
+      if (isset($this->variablesList->{$name})) {
+        return $this->variablesList->{$name};
       }
+
       return $default;
     }
     // The response from Drush can be "No matching variable found.", even with
