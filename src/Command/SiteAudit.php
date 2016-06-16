@@ -18,6 +18,9 @@ use Symfony\Component\Console\Exception\InvalidArgumentException;
 
 class SiteAudit extends Command {
 
+  protected $start = NULL;
+  protected $end = NULL;
+
   /**
    * @inheritdoc
    */
@@ -58,6 +61,8 @@ class SiteAudit extends Command {
    * @inheritdoc
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
+    $this->timerStart();
+
     $drush_alias = $input->getArgument('drush-alias');
     // Normalise the @ in the alias. Remove it to be safe.
     $drush_alias = str_replace('@', '', $drush_alias);
@@ -129,6 +134,18 @@ class SiteAudit extends Command {
     if ($input->getOption('report-dir')) {
       $this->writeReport($reports_dir, $output, $profile, $site);
     }
+
+    $seconds = $this->timerEnd();
+    $output->writeln('<info>Execution time: ' . $seconds . ' seconds</info>');
+  }
+
+  protected function timerStart() {
+    $this->start = microtime(true);
+  }
+
+  protected function timerEnd() {
+    $this->end = microtime(true);
+    return (int) ($this->end - $this->start);
   }
 
   protected function runChecks($context) {

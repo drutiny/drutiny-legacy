@@ -38,6 +38,8 @@ class AcsfAudit extends SiteAudit {
    * @inheritdoc
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
+    $this->timerStart();
+
     $drush_alias = $input->getArgument('drush-alias');
     // Normalise the @ in the alias. Remove it to be safe.
     $drush_alias = str_replace('@', '', $drush_alias);
@@ -181,6 +183,9 @@ class AcsfAudit extends SiteAudit {
       });
       $this->writeReport($reports_dir, $output, $profile, $unique_sites);
     }
+
+    $seconds = $this->timerEnd();
+    $output->writeln('<info>Execution time: ' . $seconds . ' seconds</info>');
   }
 
   protected function runChecks($context) {
