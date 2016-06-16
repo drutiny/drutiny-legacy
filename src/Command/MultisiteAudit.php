@@ -41,6 +41,8 @@ class MultisiteAudit extends SiteAudit {
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
     $drush_alias = $input->getArgument('drush-alias');
+    // Normalise the @ in the alias. Remove it to be safe.
+    $drush_alias = str_replace('@', '', $drush_alias);
 
     $reports_dir = $input->getOption('report-dir');
     if (!is_dir($reports_dir) || !is_writeable($reports_dir)) {
