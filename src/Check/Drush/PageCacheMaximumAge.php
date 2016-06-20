@@ -11,12 +11,8 @@ class PageCacheMaximumAge extends Check {
   }
 
   public function check() {
-    $value = $this->context->drush->getVariable('page_cache_maximum_age', 0);
-    if (is_int($value) || is_string($value)) {
-      $this->setToken('value', $value);
-      return ((int) $value) >= $this->getOption('cache', 300);
-    }
-
-    return FALSE;
+    $page_cache_maximum_age = (int) $this->context->drush->getVariable('page_cache_maximum_age', 0);
+    $this->setToken('page_cache_maximum_age', $page_cache_maximum_age);
+    return ($page_cache_maximum_age >= $this->getOption('cache', 300));
   }
 }
