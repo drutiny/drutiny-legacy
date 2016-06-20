@@ -12,6 +12,7 @@ checks :
       - dblog
       - overlay
       - php
+      - radioactivity
       - statistics
       - update
   \SiteAudit\Check\Drush\PreprocessCSS : {}
