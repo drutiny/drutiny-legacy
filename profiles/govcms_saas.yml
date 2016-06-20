@@ -24,6 +24,7 @@ checks :
       - update
   \SiteAudit\Check\Drush\PreprocessCSS : {}
   \SiteAudit\Check\Drush\PreprocessJS : {}
+  \SiteAudit\Check\Drush\UserRegister : {}
   \SiteAudit\Check\Drush\ModulePermissions : {}
   \SiteAudit\Check\Drush\PageCacheMaximumAge :
     cache : 300
