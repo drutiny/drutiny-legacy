@@ -29,6 +29,9 @@ abstract class Check {
   public function getTokens() {
     $tokens = [];
     foreach ($this->options as $key => $value) {
+      if (is_array($value)) {
+        $value = implode(', ', $value);
+      }
       $tokens[':' . $key] = $value;
     }
     return $tokens;
