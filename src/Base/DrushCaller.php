@@ -103,6 +103,11 @@ class DrushCaller {
     }
   }
 
+  public function getAllUserRoles() {
+    $result = $this->sqlq("'SELECT rid from users_roles'");
+    return $result->getOutput();
+  }
+
   public function getAllRoles() {
     return $this->roleList('--format=json')->parseJson(TRUE);
   }

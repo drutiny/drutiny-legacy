@@ -17,6 +17,7 @@ checks :
       - robotstxt
   \SiteAudit\Check\Drush\ModuleDisabled:
     modules:
+      - services
       - dblog
       - overlay
       - php
@@ -25,6 +26,7 @@ checks :
   \SiteAudit\Check\Drush\PreprocessCSS : {}
   \SiteAudit\Check\Drush\PreprocessJS : {}
   \SiteAudit\Check\Drush\ModulePermissions : {}
+  \SiteAudit\Check\Drush\ElevatedPrivileges : {}
   \SiteAudit\Check\Drush\PageCacheMaximumAge :
     cache : 300
   \SiteAudit\Check\Drush\UpdateDBStatus: {}
