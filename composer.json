@@ -7,5 +7,6 @@
         "symfony/console": "^3.0",
         "symfony/yaml": "^3.0",
         "symfony/class-loader": "^3.1"
-    }
+    },
+    "bin": ["site-audit"]
 }
