@@ -1,4 +1,5 @@
 {
+    "name": "seanhamlin/site-audit",
     "autoload": {
         "psr-4": {"SiteAudit\\": "src/"}
     },
