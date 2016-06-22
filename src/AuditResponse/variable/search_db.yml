@@ -4,5 +4,5 @@ remediation: "Disable <code>search_api_db</code> and then configure search to us
 messages:
   na: 'Search is not enabled.'
   success: 'Search is not using the database.'
-  failure: 'Search is using the database.'
+  failure: 'Search is using the database. Currently <code>:nodes_in_search</code> nodes in the database index.'
   exception: 'Could not determine Search settings.'
