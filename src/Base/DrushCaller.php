@@ -57,6 +57,24 @@ class DrushCaller {
   }
 
   /**
+   * Wrapper function to hide the quoting madness.
+   */
+  public function sqlQuery($sql) {
+    global $argv;
+
+    // @TODO do this better.
+    $acsf_or_multi = ($argv[1] == 'audit:site') ? FALSE : TRUE;
+    if ($acsf_or_multi) {
+      $result = $this->sqlq('\"' . $sql . '\"');
+    }
+    else {
+      $result = $this->sqlq('"' . $sql . '"');
+    }
+
+    return $result->getOutput();
+  }
+
+  /**
    * Try to find out if a module is enabled or not.
    *
    * @param $name

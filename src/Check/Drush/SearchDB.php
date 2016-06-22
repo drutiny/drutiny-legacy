@@ -19,14 +19,7 @@ class SearchDB extends Check {
     // Check if the database is used used to search.
     if ($this->context->drush->moduleEnabled('search_api_db')) {
       // If the database is in use, find out how many nodes are in it.
-      global $argv;
-      $acsf = ($argv[1] == 'audit:acsf') ? TRUE : FALSE;
-      if($acsf) {
-        $result = $this->context->drush->sqlq('\"SELECT COUNT(item_id) FROM search_api_db_default_node_index;\"');
-      } else {
-        $result = $this->context->drush->sqlq('"SELECT COUNT(item_id) FROM search_api_db_default_node_index;"');
-      }
-      $output = $result->getOutput();
+      $output = $this->context->drush->sqlQuery('SELECT COUNT(item_id) FROM search_api_db_default_node_index;');
 
       // There are some differences in running the command on site factory then
       // locally.
