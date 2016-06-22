@@ -41,6 +41,10 @@ class DrushCaller {
       $command[] = $arg;
     }
 
+    foreach ($args as &$arg) {
+      $arg = '"' . addcslashes($arg, '"') . '"';
+    }
+
     $command[] = $method;
     $command = array_merge($command, $args);
     return $this->executor->execute(implode(' ', $command));
