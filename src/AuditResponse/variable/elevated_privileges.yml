@@ -1,7 +1,0 @@
-title: 'Elevated Privileges'
-description: "There should only be one user with the administrator role."
-remediation: "Check that only one user or none have the role 'administrator'."
-messages:
-  success: 'One or less administrators'
-  failure: 'There is more than one administrator. Currently there are <code>:value</code> administrators.'
-  na: 'Could not determine administrator role.'

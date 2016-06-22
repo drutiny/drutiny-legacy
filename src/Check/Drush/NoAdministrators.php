@@ -5,10 +5,10 @@ namespace SiteAudit\Check\Drush;
 use SiteAudit\Check\Check;
 use SiteAudit\AuditResponse\AuditResponse;
 
-class ElevatedPrivileges extends Check {
+class NoAdministrators extends Check {
   static public function getNamespace()
   {
-    return 'variable/elevated_privileges';
+    return 'variable/no_administrators';
   }
 
   public function check()
@@ -22,7 +22,7 @@ class ElevatedPrivileges extends Check {
           $admin_count++;
         }
       }
-      if($admin_count > 1) {
+      if($admin_count > 0) {
         $this->setToken('value', $admin_count);
         return AuditResponse::AUDIT_FAILURE;
       }
