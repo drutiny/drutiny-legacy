@@ -8,11 +8,17 @@ use SiteAudit\Check\Registry;
 
 class Profile
 {
-  const DIRECTORY = 'profiles';
 
   protected $title;
   protected $machine_name;
   protected $checks = array();
+  protected $filepaths = array(
+    'system' => 'profiles',
+    'local' => '.',
+    'user' => '~/.site-audit',
+    'global' => '/etc/site-audit/profiles',
+  );
+  protected $filepath = FALSE;
 
   /**
    * Set the Profile title
@@ -87,14 +93,19 @@ class Profile
 
     $yaml = Yaml::dump($data);
 
+    if (!$this->filepath) {
+      $this->filepath = $this->filepaths['local'] . '/' . $this->getMachineName() . '.yml';
+    }
+
     return file_put_contents($this->getFilepath(), $yaml);
   }
 
   public function load($machine_name)
   {
-    if (!file_exists($this->getFilepath($machine_name))) {
+    if (!$this->filepath = $this->find($machine_name)) {
       return FALSE;
     }
+
     $yaml = file_get_contents($this->getFilepath($machine_name));
     $data = Yaml::parse($yaml);
     $this->setTitle($data['metadata']['title'])
@@ -102,13 +113,20 @@ class Profile
     $this->checks = $data['checks'];
   }
 
-  public function getFilepath($machine_name = NULL)
-  {
-    if (empty($machine_name)) {
-      $machine_name = $this->getMachineName();
-    }
+  public function find($machine_name) {
     $filename = $machine_name . '.yml';
-    return self::DIRECTORY . '/' . $filename;
+    foreach (array_filter($this->filepaths, 'is_dir') as $filepath) {
+      $location = $filepath . '/' . $filename;
+      if (file_exists($location)) {
+        return $location;
+      }
+    }
+    return FALSE;
+  }
+
+  public function getFilepath()
+  {
+    return $this->filepath;
   }
 
 }
