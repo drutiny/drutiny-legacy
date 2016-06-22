@@ -41,6 +41,10 @@ class DrushCaller {
       $command[] = $arg;
     }
 
+    foreach ($args as &$arg) {
+      $arg = '"' . addcslashes($arg, '"') . '"';
+    }
+
     $command[] = $method;
     $command = array_merge($command, $args);
     return $this->executor->execute(implode(' ', $command));
@@ -101,6 +105,11 @@ class DrushCaller {
     catch (\Exception $e) {
       return $default;
     }
+  }
+
+  public function getAllUserRoles() {
+    $result = $this->sqlq("'SELECT * from users_roles where uid > 1'");
+    return $result->getOutput();
   }
 
   public function getAllRoles() {
