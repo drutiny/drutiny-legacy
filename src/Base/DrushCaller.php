@@ -108,7 +108,7 @@ class DrushCaller {
   }
 
   public function getAllUserRoles() {
-    $result = $this->sqlq("'SELECT * from users_roles where uid > 1'");
+    $result = $this->sqlq("SELECT * FROM users_roles WHERE uid > 1;");
     return $result->getOutput();
   }
 

@@ -20,7 +20,10 @@ class BlacklistPermissions extends Check {
     foreach ($perms as $perm) {
       $where[] = "(rp.permission LIKE '$perm')";
     }
-    $sql = "SELECT r.rid, r.name, rp.permission FROM role r INNER JOIN role_permission rp ON rp.rid = r.rid WHERE " . implode(' OR ', $where);
+
+    // We don't care about the 'administrator' role having access.
+    $admin_role = $this->context->drush->getVariable('user_admin_role', 0);
+    $sql = "SELECT r.rid, r.name, rp.permission FROM role r INNER JOIN role_permission rp ON rp.rid = r.rid WHERE r.rid != ${admin_role} AND  " . implode(' OR ', $where);
 
     try {
       $result = $this->context->drush->sqlq($sql);
@@ -32,7 +35,6 @@ class BlacklistPermissions extends Check {
       return TRUE;
     }
 
-    $roles = [];
     $black_roles = [];
     foreach ($result->getOutput() as $line) {
       list($rid, $role, $permission) = explode("\t", $line);

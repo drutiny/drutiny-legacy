@@ -13,20 +13,21 @@ class NoAdministrators extends Check {
 
   public function check()
   {
-    $admin_role = $this->context->drush->getVariable('user_admin_role');
-    if(isset($admin_role)) {
+    $admin_role = $this->context->drush->getVariable('user_admin_role', 0);
+    if (isset($admin_role)) {
       $user_roles = $this->context->drush->getAllUserRoles();
       $admin_count = 0;
       foreach ($user_roles as $role) {
-        if(is_numeric($role) && (int)$admin_role === (int)$role) {
+        if (is_numeric($role) && (int) $admin_role === (int) $role) {
           $admin_count++;
         }
       }
-      if($admin_count > 0) {
+      if ($admin_count > 0) {
         $this->setToken('value', $admin_count);
         return AuditResponse::AUDIT_FAILURE;
       }
-    } else {
+    }
+    else {
       return AuditResponse::AUDIT_NA;
     }
 

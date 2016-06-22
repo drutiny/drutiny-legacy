@@ -23,6 +23,9 @@ checks :
       - php
       - statistics
       - update
+  \SiteAudit\Check\D7\BlacklistPermissions:
+    permissions:
+      - 'administer seckit'
   \SiteAudit\Check\Drush\PreprocessCSS : {}
   \SiteAudit\Check\Drush\PreprocessJS : {}
   \SiteAudit\Check\Drush\UserRegister : {}
