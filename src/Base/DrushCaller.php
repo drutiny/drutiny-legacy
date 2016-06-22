@@ -42,7 +42,13 @@ class DrushCaller {
     }
 
     foreach ($args as &$arg) {
-      $arg = '"' . addcslashes($arg, '"') . '"';
+      // no need to quote drush arguments.
+      if (strpos($arg, '--') === 0) {
+        $arg = addcslashes($arg, '"');
+      }
+      else {
+        $arg = "'" . addcslashes($arg, '"') . "'";
+      }
     }
 
     $command[] = $method;
@@ -108,7 +114,7 @@ class DrushCaller {
   }
 
   public function getAllUserRoles() {
-    $result = $this->sqlq("SELECT * FROM users_roles WHERE uid > 1;");
+    $result = $this->sqlq('SELECT * FROM users_roles WHERE uid > 1;');
     return $result->getOutput();
   }
 
@@ -127,7 +133,7 @@ class DrushCaller {
    */
   public function getRolesForPermission($permission) {
     try {
-      return $this->roleList('--format=json --filter=\''.$permission.'\'')->parseJson(TRUE);
+      return $this->roleList('--format=json', '--filter="' . $permission . '"')->parseJson(TRUE);
     } catch (\Exception $e) {
       return NULL;
     }
