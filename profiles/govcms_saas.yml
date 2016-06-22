@@ -28,6 +28,7 @@ checks :
       - 'administer features'
       - 'administer govcms_dlm'
       - 'administer honeypot'
+      - 'administer module permissions'
       - 'administer modules'
       - 'administer password policies'
       - 'administer permissions'
