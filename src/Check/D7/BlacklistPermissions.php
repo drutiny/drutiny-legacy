@@ -43,7 +43,11 @@ class BlacklistPermissions extends Check {
     }
 
     foreach ($black_roles as $role => &$perms) {
-      $perms = $role . ': ' . implode(', ', $perms);
+      if($role == 'name' && $perms[0] == 'permission') {
+        unset($black_roles[$role]);
+        continue;
+      }
+      $perms = '<br /><strong>' . $role . ':</strong> <code>' . implode('</code>, <code>', $perms) . '</code>';
     }
 
     $this->setToken('roles', implode("\n", $black_roles));
