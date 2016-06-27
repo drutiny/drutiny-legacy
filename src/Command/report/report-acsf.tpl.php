@@ -71,25 +71,25 @@
   <!-- Start Filters -->
   <div class="row display-filters">
     <div class="col-sm-12">
-      <a href="#" id="show-filters">Show Filters</a>
-      <fieldset class="display-filter-toggle">
-        <legend><h2>Filters (or)</h2></legend>
+      <a href="#" id="show-filters" class="btn btn-default"><span class="glyphicon glyphicon-filter" aria-hidden="true"></span> <strong>Show filters</strong></a>
+      <fieldset class="display-filter-toggle" style="display: none;">
+        <legend><h2>Filters <small>(or)</small></h2></legend>
         <div class="row">
           <div class="col-sm-4">
             <span class="page-header"><small>Domain:</small></span>
             <select id="filter-filter-domains" value="na">
               <?php
-              $filter_titles = array();
+                $filter_titles = array();
               ?>
               <option name="na"></option>
-              <?php foreach($unique_sites as $id => &$site) : ?>
+              <?php foreach($unique_sites as $id => $site) : ?>
                 <option name="<?php print $id ?>" style="font-size:.75em"><?php print str_replace('.', '-', $site['domain']); ?></option>
                 <?php
-                if(isset($site['results']) && !empty($site['results'])) {
+                if (isset($site['results']) && !empty($site['results'])) {
                   $classes = array();
                   $domain = str_replace('.', '-', $site['domain']);
-                  $classes[] = 'filter-filter-domains-'.$domain;
-                  foreach($site['results'] as $index => $result) {
+                  $classes[] = 'filter-filter-domains-' . $domain;
+                  foreach ($site['results'] as $index => $result) {
                     $outcome = "Failed";
                     if ($result->getStatus() <= 0) {
                       $outcome = "Success";
@@ -100,15 +100,15 @@
 
                     $class = $result->getTitle();
 
-                    if(!isset($filter_titles[$class]) || !in_array($outcome, $filter_titles[$class])) {
+                    if (!isset($filter_titles[$class]) || !in_array($outcome, $filter_titles[$class])) {
                       $filter_titles[$class][] = $outcome;
                     }
 
                     $class = str_replace(' ', '-', $class);
                     $class = strtolower($class);
-                    $classes[] = strtolower('filter-filter-'.$class.'-'.$outcome);
+                    $classes[] = strtolower('filter-filter-' . $class . '-' . $outcome);
                   }
-                  $site['classes'] = $classes;
+                  $unique_sites[$id]['classes'] = $classes;
                 }
                 ?>
               <?php endforeach; ?>
@@ -150,7 +150,7 @@
         </thead>
         <tbody>
         <?php foreach($unique_sites as $id => $site) : ?>
-          <?php if(isset($site['results']) && !empty($site['results'])) { ?>
+          <?php if (isset($site['results']) && !empty($site['results'])) : ?>
             <?php foreach($site['results'] as $index => $result) : ?>
               <?php
               $class = "danger";
@@ -170,7 +170,7 @@
                 <td class="<?php print $class; ?>"><?php print $result; ?></td>
               </tr>
             <?php endforeach; ?>
-          <?php } ?>
+          <?php endif; ?>
         <?php endforeach; ?>
         </tbody>
       </table>
@@ -193,14 +193,13 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    $(".display-filter-toggle").hide();
-
     $("#show-filters").click(function() {
       $(".display-filter-toggle").toggle();
-      if($("#show-filters").text() == "Hide filters") {
-        $("#show-filters").text("Show filters");
-      } else {
-        $("#show-filters").text("Hide filters");
+      if ($("#show-filters strong").text() == "Hide filters") {
+        $("#show-filters strong").text("Show filters");
+      }
+      else {
+        $("#show-filters strong").text("Hide filters");
       }
     });
 
@@ -222,17 +221,19 @@
           filters = filters + ' .' + $(this).attr('id') + '-' + filter + ',';
         }
       });
-      if(filters != "") {
-        filters = filters.toLowerCase().slice(0,-1);
-      } else {
+      if (filters != "") {
+        filters = filters.toLowerCase().slice(0, -1);
+      }
+      else {
         filters = ".filterable";
       }
 
       $(".filterable").each(function() {
         var target = $(this);
-        if(target.is(filters)) {
+        if (target.is(filters)) {
           target.show();
-        } else {
+        }
+        else {
           target.hide();
         }
       });
