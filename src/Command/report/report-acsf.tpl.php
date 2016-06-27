@@ -13,7 +13,16 @@
       padding-top: 50px;
       padding-bottom: 20px;
     }
+
+    .page-header {
+      border-bottom: none;
+    }
+
     @media print {
+      .display-filters {
+        display: none !important;
+      }
+
       .table .danger td,
       .table td.danger,
       .table .danger th {
@@ -59,6 +68,71 @@
 </div>
 
 <div class="container">
+  <!-- Start Filters -->
+  <div class="row display-filters">
+    <div class="col-sm-12">
+      <a href="#" id="show-filters">Show Filters</a>
+      <fieldset class="display-filter-toggle">
+        <legend><h2>Filters (or)</h2></legend>
+        <div class="row">
+          <div class="col-sm-4">
+            <span class="page-header"><small>Domain:</small></span>
+            <select id="filter-filter-domains" value="na">
+              <?php
+              $filter_titles = array();
+              ?>
+              <option name="na"></option>
+              <?php foreach($unique_sites as $id => &$site) : ?>
+                <option name="<?php print $id ?>" style="font-size:.75em"><?php print str_replace('.', '-', $site['domain']); ?></option>
+                <?php
+                if(isset($site['results']) && !empty($site['results'])) {
+                  $classes = array();
+                  $domain = str_replace('.', '-', $site['domain']);
+                  $classes[] = 'filter-filter-domains-'.$domain;
+                  foreach($site['results'] as $index => $result) {
+                    $outcome = "Failed";
+                    if ($result->getStatus() <= 0) {
+                      $outcome = "Success";
+                    }
+                    else if ($result->getStatus() == 1) {
+                      $outcome = "Warning";
+                    }
+
+                    $class = $result->getTitle();
+
+                    if(!isset($filter_titles[$class]) || !in_array($outcome, $filter_titles[$class])) {
+                      $filter_titles[$class][] = $outcome;
+                    }
+
+                    $class = str_replace(' ', '-', $class);
+                    $class = strtolower($class);
+                    $classes[] = strtolower('filter-filter-'.$class.'-'.$outcome);
+                  }
+                  $site['classes'] = $classes;
+                }
+                ?>
+              <?php endforeach; ?>
+            </select>
+          </div>
+          <?php foreach($filter_titles as $key => $value) : ?>
+            <div class="col-sm-4">
+              <span class="page-header"><small><?php print $key ?>:</small></span>
+              <select id="filter-filter-<?php print str_replace(' ', '-', $key); ?>" value="na">
+                <option name="na"></option>
+                <?php foreach($value as $outcome) : ?>
+                  <option name="<?php print $outcome ?>" value="<?php print strtolower($outcome); ?>" style="font-size:.75em"><?php print $outcome; ?></option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+          <?php endforeach; ?>
+          <div class="col-sm-4">
+            <button class="btn btn-primary" id="filter-submit">Filter</button> &nbsp; <button class="btn btn-secondary" id="filter-clear">Clear</button>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <!-- End Filters -->
   <!-- Example row of columns -->
   <div class="row">
 
@@ -67,26 +141,27 @@
 
       <table class="table table-bordered">
         <thead>
-          <tr>
-            <th>Domain</th>
-            <th>Site ID</th>
-            <th>Check</th>
-            <th>Result</th>
-          </tr>
+        <tr>
+          <th>Domain</th>
+          <th>Site ID</th>
+          <th>Check</th>
+          <th>Result</th>
+        </tr>
         </thead>
         <tbody>
-          <?php foreach($unique_sites as $id => $site) : ?>
+        <?php foreach($unique_sites as $id => $site) : ?>
+          <?php if(isset($site['results']) && !empty($site['results'])) { ?>
             <?php foreach($site['results'] as $index => $result) : ?>
               <?php
-                $class = "danger";
-                if ($result->getStatus() <= 0) {
-                  $class = "success";
-                }
-                else if ($result->getStatus() == 1) {
-                  $class = "warning";
-                }
+              $class = "danger";
+              if ($result->getStatus() <= 0) {
+                $class = "success";
+              }
+              else if ($result->getStatus() == 1) {
+                $class = "warning";
+              }
               ?>
-              <tr>
+              <tr id="domain-<?php print $id ?>" class="filterable <?php print implode(' ', $site['classes']); ?>">
                 <?php if ($index == 0) : ?>
                   <th rowspan="<?php print count($site['results']); ?>"><?php print $site['domain']; ?></th>
                   <th rowspan="<?php print count($site['results']); ?>"><?php print $id; ?></th>
@@ -95,7 +170,8 @@
                 <td class="<?php print $class; ?>"><?php print $result; ?></td>
               </tr>
             <?php endforeach; ?>
-          <?php endforeach; ?>
+          <?php } ?>
+        <?php endforeach; ?>
         </tbody>
       </table>
 
@@ -114,6 +190,55 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".display-filter-toggle").hide();
+
+    $("#show-filters").click(function() {
+      $(".display-filter-toggle").toggle();
+      if($("#show-filters").text() == "Hide filters") {
+        $("#show-filters").text("Show filters");
+      } else {
+        $("#show-filters").text("Hide filters");
+      }
+    });
+
+    $("#filter-clear").click(function() {
+      $("[id^='filter-filter-']").each(function () {
+        $(this).val("na")
+      });
+      $(".filterable").each(function() {
+        var target = $(this);
+        target.show();
+      });
+    });
+
+    $("#filter-submit").click(function() {
+      var filters = "";
+      $("[id^='filter-filter-']").each(function() {
+        var filter = $(this).val();
+        if(filter != '') {
+          filters = filters + ' .' + $(this).attr('id') + '-' + filter + ',';
+        }
+      });
+      if(filters != "") {
+        filters = filters.toLowerCase().slice(0,-1);
+      } else {
+        filters = ".filterable";
+      }
+
+      $(".filterable").each(function() {
+        var target = $(this);
+        if(target.is(filters)) {
+          target.show();
+        } else {
+          target.hide();
+        }
+      });
+    });
+  });
+</script>
 
 </body>
 </html>
