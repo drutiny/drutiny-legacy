@@ -12,6 +12,9 @@ class ViewsSqlSignature extends Check {
 
   public function check()
   {
+    if (!$this->context->drush->moduleEnabled('views')) {
+      throw new \Exception("Views is not enabled on this site.");
+    }
     $json = (int) $this->context->drush->getVariable('views_sql_signature', 0);
     return (bool) $json;
   }
