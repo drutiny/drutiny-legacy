@@ -46,19 +46,19 @@ composer install
 Run using the `default` profile (replace [alias] with your drush alias):
 
 ```
-php site-audit audit:site [alias]
+php bin/site-audit audit:site [alias]
 ```
 
 Run a side audit using the `govcms_saas` profile:
 
 ```
-php site-audit audit:site [alias] --profile=govcms_saas
+php bin/site-audit audit:site [alias] --profile=govcms_saas
 ```
 
 Because this is Symfony console, you have some other familiar commands:
 
 ```
-php site-audit help audit:site
+php bin/site-audit help audit:site
 ```
 
 In particular, if you use the `-v` argument, then you will see all the drush commands, and SSH commands printed to the screen.
@@ -66,7 +66,7 @@ In particular, if you use the `-v` argument, then you will see all the drush com
 You can also write the output to a file:
 
 ```
-php site-audit audit:site [alias] --profile=govcms_saas --report-dir=/tmp
+php bin/site-audit audit:site [alias] --profile=govcms_saas --report-dir=/tmp
 ```
 
 ## How to run against an entire Site Factory
@@ -74,19 +74,19 @@ php site-audit audit:site [alias] --profile=govcms_saas --report-dir=/tmp
 Run using the `default` profile (replace [alias] with your drush alias):
 
 ```
-php site-audit audit:acsf [alias]
+php bin/site-audit audit:acsf [alias]
 ```
 
 Run a side audit using the `govcms_saas` profile:
 
 ```
-php site-audit audit:acsf [alias] --profile=govcms_saas
+php bin/site-audit audit:acsf [alias] --profile=govcms_saas
 ```
 
 You can also write the output to a file:
 
 ```
-php site-audit audit:acsf [alias] --profile=govcms_saas --report-dir=/tmp
+php bin/site-audit audit:acsf [alias] --profile=govcms_saas --report-dir=/tmp
 ```
 
 
@@ -101,7 +101,7 @@ cp domains{-example,}.yml
 Run using the `govcms_saas` profile (replace [alias] with your drush alias):
 
 ```
-php site-audit audit:multisite [alias] --profile=govcms_saas --report-dir=/tmp --domain-file=domains.yml
+php bin/site-audit audit:multisite [alias] --profile=govcms_saas --report-dir=/tmp --domain-file=domains.yml
 ```
 
 ## Bash aliases
