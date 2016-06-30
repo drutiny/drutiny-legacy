@@ -4,13 +4,19 @@ namespace SiteAudit\Check\Drush;
 
 use SiteAudit\Check\Check;
 use SiteAudit\AuditResponse\AuditResponse;
+use SiteAudit\Annotation\CheckInfo;
 
+/**
+ * @CheckInfo(
+ * title = "No Administrators",
+ * description = "There should be no administrators other than user 1.",
+ * remediation = "Check that only no users have the 'administrator' role, other than user 1.",
+ * success = "No administrators other than user 1",
+ * failure = "Currently there are <code>:value</code> administrators.",
+ * not_available = "Could not determine administrator role.",
+ * )
+ */
 class NoAdministrators extends Check {
-  static public function getNamespace()
-  {
-    return 'variable/no_administrators';
-  }
-
   public function check()
   {
     $admin_role = $this->context->drush->getVariable('user_admin_role', 0);

@@ -3,14 +3,19 @@
 namespace SiteAudit\Check\Drush;
 
 use SiteAudit\Check\Check;
+use SiteAudit\Annotation\CheckInfo;
 
+/**
+ * @CheckInfo(
+ *  title = "Cron last run",
+ *  description = "Checks that cron has run recently.",
+ *  remediation = "Ensure a cron job has been configured for the site. If so, file a support ticket to investigate why cron has stopped working.",
+ *  success = "Cron was last run on <code>:cron_last</code>.",
+ *  failure = "Cron was last run on <code>:cron_last</code>",
+ *  exception = "Could not determine status of cron: :exception."
+ * )
+ */
 class CronHasRun extends Check {
-
-  static public function getNamespace()
-  {
-    return 'system/cron_has_run';
-  }
-
   public function check()
   {
     if (!$cron_last = $this->context->drush->getVariable('cron_last')) {

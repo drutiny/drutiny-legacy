@@ -6,11 +6,14 @@ use SiteAudit\Context;
 use SiteAudit\AuditResponse\AuditResponse;
 use SiteAudit\Executor\DoesNotApplyException;
 use SiteAudit\Executor\ResultException;
+use Doctrine\Common\Annotations\AnnotationReader;
+use SiteAudit\Annotation\CheckInfo;
 
 abstract class Check {
 
   protected $context;
   private $options;
+  private $info;
 
   public function __construct(Context $context, Array $options) {
     $this->context = $context;
@@ -49,7 +52,21 @@ abstract class Check {
    */
   static public function getNamespace()
   {
-    return 'not/available';
+    throw new \Exception("This method is now deprecated. Please use self::getInfo() instead.");
+  }
+
+  /**
+   * Retrieve CheckInfo object.
+   */
+  final public function getInfo()
+  {
+    if (empty($this->info)) {
+      $reflection = new \ReflectionClass($this);
+      $reader = new AnnotationReader();
+      $info = $reader->getClassAnnotations($reflection);
+      $this->info = !empty($info[0]) ? $info[0] : new CheckInfo();
+    }
+    return $this->info;
   }
 
   /**
@@ -59,7 +76,7 @@ abstract class Check {
    */
   public function execute()
   {
-    $response = new AuditResponse($this::getNamespace(), $this);
+    $response = new AuditResponse($this);
 
     try {
       $result = $this->check();

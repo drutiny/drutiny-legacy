@@ -1,7 +1,0 @@
-title: 'CSS aggregation'
-description: "With CSS optimization disabled, your website visitors are experiencing slower page performance and the server load is increased."
-remediation: "Set the variable <code>preprocess_css</code> to be <code>1</code>."
-messages:
-  success: 'CSS aggregation is enabled.'
-  failure: 'CSS aggregation is not enabled.'
-  exception: 'Could not determine CSS aggregation setting.'

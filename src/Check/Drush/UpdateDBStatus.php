@@ -3,12 +3,19 @@
 namespace SiteAudit\Check\Drush;
 
 use SiteAudit\Check\Check;
+use SiteAudit\Annotation\CheckInfo;
 
+/**
+ * @CheckInfo(
+ *  title = "Database updates",
+ *  description = "Updates to Drupal core or contrib modules sometimes include important database changes which should be applied after the code updates have been deployed.",
+ *  remediation = "Required database updates should be applied by running <code>drush updatedb</code>.",
+ *  success = "No database updates required.",
+ *  failure = "There are pending updates to be run.",
+ *  exception = "Could not determine status for the database for update.",
+ * )
+ */
 class UpdateDBStatus extends Check {
-  static public function getNamespace()
-  {
-    return 'system/updatedb';
-  }
   public function check()
   {
     $context = $this->context;

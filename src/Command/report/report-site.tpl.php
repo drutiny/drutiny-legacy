@@ -86,11 +86,11 @@
                 <th><?php print $result->getTitle(); ?></th>
                 <td>
                   <p><?php print $result; ?></p>
-                  <p><?php print $result->profile['description']; ?></p>
+                  <p><?php print $result->getDescription(); ?></p>
                   <div class="panel panel-danger">
                     <div class="panel-heading">Remediation</div>
                     <div class="panel-body">
-                      <p><?php print $result->profile['remediation']; ?></p>
+                      <p><?php print $result->getRemediation(); ?></p>
                     </div>
                   </div>
                 </td>

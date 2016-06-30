@@ -2,7 +2,6 @@
 
 namespace SiteAudit\AuditResponse;
 
-use Symfony\Component\Yaml\Parser;
 use SiteAudit\Executor\DoesNotApplyException;
 use SiteAudit\Executor\ResultException;
 use SiteAudit\Check\Check;
@@ -15,24 +14,13 @@ class AuditResponse {
   const AUDIT_FAILURE = 2;
   const AUDIT_ERROR = 3;
 
-  public $profile = [];
-
   protected $check;
 
   protected $status;
 
   public $exception;
 
-  public function __construct($namespace, Check $check) {
-    $filename = dirname(__FILE__) . '/' . $namespace . '.yml';
-
-    if (!file_exists($filename)) {
-      throw new \Exception("No namespace found for $namespace");
-    }
-
-    $parser = new Parser();
-    $this->profile = $parser->parse(file_get_contents($filename));
-
+  public function __construct(Check $check) {
     $this->check = $check;
   }
 
@@ -62,15 +50,36 @@ class AuditResponse {
   }
 
   protected function getMessage($type = 'success') {
-    if (!isset($this->profile['messages'][$type])) {
-      throw new \Exception("Cannot format message. Unknown type $type.");
+    switch ($type) {
+      case 'success':
+      case 'not_available':
+      case 'warning':
+      case 'failure':
+      case 'exception':
+      case 'notice':
+        $message = $this->check->getInfo()->{$type};
+        break;
+
+      case 'na':
+        return $this->getMessage('not_available');
+
+      default:
+        throw new \Exception("Cannot format message. Unknown type $type.");
     }
-    $message = $this->profile['messages'][$type];
+
     $tokens = $this->check->getTokens();
     if ($type == 'exception') {
       $tokens[':exception'] = $this->exception->getMessage();
     }
     return strtr($message, $tokens);
+  }
+
+  public function getDescription() {
+    return $this->check->getInfo()->description;
+  }
+
+  public function getRemediation() {
+    return $this->check->getInfo()->remediation;
   }
 
   public function setStatus($status) {
@@ -82,6 +91,6 @@ class AuditResponse {
   }
 
   public function getTitle() {
-    return $this->profile['title'];
+    return $this->check->getInfo()->title;
   }
 }

@@ -5,13 +5,21 @@ namespace SiteAudit\Check\Drush;
 use SiteAudit\AuditResponse\AuditResponse;
 use SiteAudit\Check\Check;
 use SiteAudit\Executor\DoesNotApplyException;
+use SiteAudit\Annotation\CheckInfo;
 
+/**
+ * @CheckInfo(
+ *  title = "Search database",
+ *  description = "Search backed with the database (and not Solr) can cause performance impacts to your site. Often the SQL queries caused but using the database are slow.",
+ *  remediation = "Disable <code>search_api_db</code> and then configure search to use Solr.",
+ *  not_available = "Search is not enabled.",
+ *  success = "Search is not using the database.",
+ *  warning = "Search is using the database. Currently <code>:nodes_in_search</code> nodes in <code>:number_of_db_indexes</code> database index:plural_index.",
+ *  failure = "Search is using the database. Currently <code>:nodes_in_search</code> nodes in <code>:number_of_db_indexes</code> database index:plural_index.",
+ *  exception = "Could not determine Search settings.",
+ * )
+ */
 class SearchDB extends Check {
-  static public function getNamespace()
-  {
-    return 'variable/search_db';
-  }
-
   public function check() {
     if (!$this->context->drush->moduleEnabled('search')) {
       throw new DoesNotApplyException();
@@ -62,4 +70,3 @@ class SearchDB extends Check {
 
   }
 }
-

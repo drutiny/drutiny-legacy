@@ -3,14 +3,19 @@
 namespace SiteAudit\Check\Drush;
 
 use SiteAudit\Check\Check;
+use SiteAudit\Annotation\CheckInfo;
 
+/**
+ * @CheckInfo(
+ *  title = "Module enabled",
+ *  description = "Check that a set of modules are enabled.",
+ *  remediation = "Enable the modules through the Drupal admin UI or drush en command.",
+ *  success = "All modules (:modules) are enabled.",
+ *  failure = "The following modules are not enabled: :not_enabled.",
+ *  exception = "Could not successfully conduct check for enabled modules.",
+ * )
+ */
 class ModuleEnabled extends Check {
-
-  static public function getNamespace()
-  {
-    return 'module/enabled';
-  }
-
   public function check()
   {
     $modules = $this->getOption('modules');

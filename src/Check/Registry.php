@@ -3,6 +3,7 @@
 namespace SiteAudit\Check;
 
 use Symfony\Component\ClassLoader\ClassMapGenerator;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 class Registry
 {
@@ -13,17 +14,19 @@ class Registry
    */
   static public function load() {
     if (empty(self::$registry)) {
-      $checkDir = realpath(__DIR__ . '/../Check');
-      $map = ClassMapGenerator::createMap($checkDir);
+      $reader = new AnnotationReader();
+      $map = ClassMapGenerator::createMap('src/Check');
 
       foreach ($map as $class => $filepath) {
         $reflect = new \ReflectionClass($class);
         if ($reflect->isAbstract()) {
           continue;
         }
-        if ($reflect->isSubClassOf('SiteAudit\Check\Check')) {
-          self::$registry[$class] = $class::getNamespace();
+        if (!$reflect->isSubClassOf('SiteAudit\Check\Check')) {
+          continue;
         }
+        $info = $reader->getClassAnnotations($reflect);
+        self::$registry[$class] = $info[0];
       }
     }
     return self::$registry;

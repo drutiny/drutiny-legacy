@@ -5,13 +5,21 @@ namespace SiteAudit\Check\Acsf;
 use SiteAudit\Check\Check;
 use SiteAudit\AuditResponse\AuditResponse;
 use SiteAudit\Executor\DoesNotApplyException;
+use SiteAudit\Annotation\CheckInfo;
 
+/**
+ * @CheckInfo(
+ *  title = "ACSF theme size",
+ *  description = "In Acquia Cloud Site Factory, you should aim to keep your theme repositories as small as possible to avoid exhausting the disk. Having theme repositories less than 50 MB is recommended.",
+ *  remediation = "Reduce the number of unneeded files, e.g. PDFs, and PSDs of any initial designs, any node modules SaaS cache files.",
+ *  success = "Theme size is currently smaller than <code>:max_size</code> MB. Actual size is <code>:value</code> MB.",
+ *  warning = "Theme size is currently smaller than <code>:max_size</code> MB but larger than <code>:warning_size</code> MB. Actual size is <code>:value</code> MB.",
+ *  failure = "Theme size is currently larger than <code>:max_size</code> MB. Actual size is <code>:value</code> MB.",
+ *  exception = "Could not determine disk usage of theme.",
+ *  not_available = "No custom theme is linked.",
+ * )
+ */
 class ThemeSize extends Check {
-
-  static public function getNamespace()
-  {
-    return 'acsf/themesize';
-  }
 
   public function check()
   {
