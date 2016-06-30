@@ -1,8 +1,0 @@
-title: 'Search 404'
-description: "Search 404 can cause performance impacts to your site if it is enabled and set to automatically search upon encountering a 404."
-remediation: "Set the variable <code>search404_skip_auto_search</code> to be <code>TRUE</code>."
-messages:
-  na: 'Search 404 module is disabled.'
-  success: 'Search 404 is set to not auto search.'
-  failure: 'Search 404 is set to auto search.'
-  exception: 'Could not determine Search 404 setting.'

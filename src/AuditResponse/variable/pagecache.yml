@@ -1,7 +1,0 @@
-title: 'Page cache'
-description: "With a page cache max age set to less than 5 minutes, the server has to frequently regenerate pages which can decrease your site's performance."
-remediation: "Set the variable <code>page_cache_maximum_age</code> to be greater than <code>300</code>."
-messages:
-  success: 'Page cache max-age is set above <code>:cache</code> seconds. Currently set to <code>:page_cache_maximum_age</code>.'
-  failure: 'Page cache max-age is not set above <code>:cache</code> seconds. Currently set to <code>:page_cache_maximum_age</code>.'
-  exception: 'Could not determine page cache max-age.'

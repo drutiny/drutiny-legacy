@@ -3,12 +3,19 @@
 namespace SiteAudit\Check\Drush;
 
 use SiteAudit\Check\Check;
+use SiteAudit\Annotation\CheckInfo;
 
+/**
+ * @CheckInfo(
+ *  title = "Securepages basepath",
+ *  description = "The securepages module redirects the user to HTTPS given certain conditions. It is known to cause issues when you redirect to the production domain in all cases (e.g. you are trying to test on a test version of the site).",
+ *  remediation = "Delete the 2 variables <code>securepages_basepath</code> and <code>securepages_basepath_ssl</code>, or set them to a blank string.",
+ *  success = "Securepages basepath is configured correctly",
+ *  failure = "Securepages basepath is not configured correctly",
+ *  exception = "Could not determine securepages settings.",
+ * )
+ */
 class SecurepagesBasepath extends Check {
-  static public function getNamespace()
-  {
-    return 'variable/securepages_basepath';
-  }
   public function check()
   {
     // If the module is disabled, then no shield.

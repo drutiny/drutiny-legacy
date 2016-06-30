@@ -3,13 +3,19 @@
 namespace SiteAudit\Check\D7;
 
 use SiteAudit\Check\Check;
+use SiteAudit\Annotation\CheckInfo;
 
+/**
+ * @CheckInfo(
+ *  title = "BlackList Permissions",
+ *  description = "Checks to ensure roles do not contain blacklisted permissions.",
+ *  remediation = "Remove blacklisted permissions from roles.",
+ *  success = "No blacklisted permissions in use.",
+ *  failure = "The following permissions should not be configured: :roles.",
+ *  exception = "Could not determine use of blackisted roles.",
+ * )
+ */
 class BlacklistPermissions extends Check {
-  static public function getNamespace()
-  {
-    return 'system/blacklist_permissions';
-  }
-
   public function check() {
     global $argv;
     $perms = $this->getOption('permissions');

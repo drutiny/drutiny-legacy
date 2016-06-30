@@ -3,12 +3,19 @@
 namespace SiteAudit\Check\Drush;
 
 use SiteAudit\Check\Check;
+use SiteAudit\Annotation\CheckInfo;
 
+/**
+ * @CheckInfo(
+ *  title = "Shield",
+ *  description = "The shield module protects Drupal sites from prying eyes, often it is used to protect sites that are not yet live, but should never be enabled for live sites.",
+ *  remediation = "Disable shield through the shield user interface.",
+ *  success = "Shield is disabled.",
+ *  failure = "Shield is enabled.",
+ *  exception = "Could not determine shield setting.",
+ * )
+ */
 class ShieldDisabled extends Check {
-  static public function getNamespace()
-  {
-    return 'variable/shield_disabled';
-  }
   public function check() {
     $context = $this->context;
 
