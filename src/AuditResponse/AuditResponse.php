@@ -74,6 +74,14 @@ class AuditResponse {
     return strtr($message, $tokens);
   }
 
+  public function getDescription() {
+    return $this->check->getInfo()->description;
+  }
+
+  public function getRemediation() {
+    return $this->check->getInfo()->remediation;
+  }
+
   public function setStatus($status) {
     $this->status = $status;
   }

@@ -76,7 +76,7 @@ abstract class Check {
    */
   public function execute()
   {
-    $response = new AuditResponse($this::getNamespace(), $this);
+    $response = new AuditResponse($this);
 
     try {
       $result = $this->check();
