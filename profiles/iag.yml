@@ -13,6 +13,7 @@ checks :
       - overlay
       - php
       - radioactivity
+      - smart_ip
       - statistics
       - update
   \SiteAudit\Check\Drush\PreprocessCSS : {}
@@ -23,6 +24,7 @@ checks :
   \SiteAudit\Check\Drush\UpdateDBStatus: {}
   \SiteAudit\Check\Drush\Search404: {}
   \SiteAudit\Check\Drush\SearchDB: {}
+  \SiteAudit\Check\Drush\SessionsAnon: {}
   \SiteAudit\Check\Drush\CronHasRun: {}
   \SiteAudit\Check\Drush\CronPoorMans: {}
   \SiteAudit\Check\Drush\XMLSiteMapBaseUrl:
