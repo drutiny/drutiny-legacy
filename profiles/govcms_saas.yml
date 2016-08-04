@@ -15,6 +15,7 @@ checks :
       - acquia_spi
       - acquia_agent
       - robotstxt
+      - govcms_account_security
   \SiteAudit\Check\Drush\ModuleDisabled:
     modules:
       - services
