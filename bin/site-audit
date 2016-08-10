@@ -10,7 +10,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 /**
  * @var ClassLoader $loader
  */
-$loader = require __DIR__ . '/../vendor/autoload.php';
+$loader = require 'vendor/autoload.php';
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 
 $application = new Application();

@@ -8,7 +8,7 @@ class CommandDiscovery
 
   static public function findCommands()
   {
-    $map = ClassMapGenerator::createMap('src/Command');
+    $map = ClassMapGenerator::createMap(__DIR__. '/Command');
     $commands = [];
     foreach ($map as $class => $filepath) {
       $reflection = new \ReflectionClass($class);
