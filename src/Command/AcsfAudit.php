@@ -118,7 +118,7 @@ class AcsfAudit extends SiteAudit {
     }
 
     //var_dump($unique_sites);
-    //$unique_sites = array_slice($unique_sites, 0 , 5, TRUE);
+    $unique_sites = array_slice($unique_sites, 0 , 2, TRUE);
     //$unique_sites = array_slice($unique_sites, 185 , 8, TRUE);
 
     $output->writeln('<comment>Found ' . count($unique_sites) . ' unqiue sites</comment>');
