@@ -27,7 +27,7 @@ class UpdateDBStatus extends Check {
     }
     if (count($output) === 1) {
       $output = reset($output);
-      if (strpos($output, 'No database updates required') === 0) {
+      if (strpos($output, 'No database updates required') === 0 || empty($output)) {
         return TRUE;
       }
     }
