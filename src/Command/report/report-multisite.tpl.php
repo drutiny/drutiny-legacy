@@ -89,8 +89,21 @@
                 <?php if ($index == 0) : ?>
                   <th rowspan="<?php print count($site['results']); ?>"><?php print $site['domain']; ?></th>
                 <?php endif; ?>
-                <td class="<?php print $class; ?>"><?php print $result->getTitle(); ?></td>
-                <td class="<?php print $class; ?>"><?php print $result; ?></td>
+                <td class="<?php print $class; ?>">
+                  <?php print $result->getTitle(); ?>
+                </td>
+                <td class="<?php print $class; ?>">
+                  <?php print $result; ?>
+                  <?php if ($result->getStatus() > 1) : ?>
+                    <p><?php print $result->getDescription(); ?></p>
+                    <div class="panel panel-danger">
+                      <div class="panel-heading">Remediation</div>
+                      <div class="panel-body">
+                        <p><?php print $result->getRemediation(); ?></p>
+                      </div>
+                    </div>
+                  <?php endif; ?>
+                </td>
               </tr>
             <?php endforeach; ?>
           <?php endforeach; ?>
