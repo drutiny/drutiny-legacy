@@ -169,14 +169,7 @@ class DrushCaller {
   }
 
   public function getAllUserRoles() {
-    global $argv;
-    $acsf = ($argv[1] == 'audit:acsf') ? TRUE : FALSE;
-    if($acsf) {
-      $result = $this->sqlq('\"SELECT rid FROM users_roles WHERE uid > 1;\"');
-    } else {
-      $result = $this->sqlq('"SELECT rid FROM users_roles WHERE uid > 1;"');
-    }
-    return $result->getOutput();
+    return $this->sqlQuery('SELECT rid FROM users_roles WHERE uid > 1;');
   }
 
   public function getAllRoles() {
