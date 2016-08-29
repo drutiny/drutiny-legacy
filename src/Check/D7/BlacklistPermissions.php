@@ -17,7 +17,6 @@ use SiteAudit\Annotation\CheckInfo;
  */
 class BlacklistPermissions extends Check {
   public function check() {
-    global $argv;
     $perms = $this->getOption('permissions');
     if (empty($perms)) {
       return TRUE;
