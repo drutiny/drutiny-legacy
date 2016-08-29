@@ -10,11 +10,13 @@ checks :
   \SiteAudit\Check\Drush\ModuleDisabled:
     modules:
       - dblog
+      - devel
       - overlay
       - php
       - radioactivity
       - smart_ip
       - statistics
+      - simpletest
       - update
   \SiteAudit\Check\Drush\PreprocessCSS : {}
   \SiteAudit\Check\Drush\PreprocessJS : {}
