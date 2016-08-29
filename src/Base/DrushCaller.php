@@ -131,6 +131,43 @@ class DrushCaller {
     }
   }
 
+  /**
+   * Try to return a variable value, bypass the $conf overrides. Useful for when
+   * drush gets in your way.
+   *
+   * @param $name
+   *   The name of the variable (exact).
+   * @param int $default
+   *   The value to return if the variable is not set.
+   * @return mixed
+   */
+  public function getVariableFromDB($name, $default = 0) {
+    try {
+      $output = $this->sqlQuery("SELECT value FROM variable WHERE name = '$name';");
+      if (empty($output)) {
+        $value = $default;
+      }
+      else if (count($output) == 1) {
+        if (empty($output[0])) {
+          $value = $default;
+        }
+        else {
+          $value = $output[0];
+        }
+      }
+      else {
+        $value = $output[1];
+      }
+
+      return $value;
+    }
+    // The response from Drush can be "No matching variable found.", even with
+    // JSON being requested, which is weird.
+    catch (\Exception $e) {
+      return $default;
+    }
+  }
+
   public function getAllUserRoles() {
     global $argv;
     $acsf = ($argv[1] == 'audit:acsf') ? TRUE : FALSE;
