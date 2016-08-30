@@ -132,6 +132,7 @@ class SiteAudit extends Command {
 
     // Optional report.
     if ($input->getOption('report-dir')) {
+      $this->ensureTimezoneSet();
       $this->writeReport($reports_dir, $output, $profile, $site);
     }
 
@@ -157,6 +158,17 @@ class SiteAudit extends Command {
       $context->output->writeln(strip_tags((string) $result, '<info><comment><error>'));
     }
     return $results;
+  }
+
+  /**
+   * Ensure there is a timezone set, if there is not already one. Note that one
+   * of the checks `CronHasRun` will set the timezone to be the site's timezone.
+   * UTC is a fallback in this case.
+   */
+  protected function ensureTimezoneSet() {
+    if (@date_default_timezone_get() === 'UTC') {
+      date_default_timezone_set('UTC');
+    }
   }
 
   protected function writeReport($reports_dir, OutputInterface $output, $profile, Array $site) {

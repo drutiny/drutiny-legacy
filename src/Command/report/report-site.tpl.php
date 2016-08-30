@@ -51,7 +51,9 @@
 <div class="jumbotron">
   <div class="container">
     <h1><?php print $profile->getTitle(); ?></h1>
-    <p>Report run across <?php print $site['domain']; ?> (<?php print date('d/m/Y h:i a', time()); ?>)</p>
+    <p>Report run across <?php print $site['domain']; ?><br/>
+      <?php print date('Y-m-d h:i a (T)', time()); ?>
+    </p>
   </div>
 </div>
 
