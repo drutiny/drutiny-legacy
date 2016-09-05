@@ -18,7 +18,7 @@ use SiteAudit\Annotation\CheckInfo;
 class SessionsAnon extends Check {
   public function check() {
 
-    $output = $this->context->drush->sqlQuery("SELECT COUNT(*) FROM sessions WHERE uid = 0;");
+    $output = $this->context->drush->sqlQuery("SELECT COUNT(*) FROM {sessions} WHERE uid = 0;");
     if (empty($output)) {
       $number_of_anon_sessions = 0;
     }

@@ -10,6 +10,7 @@ class DrushCaller {
   protected $alias;
   protected $modulesList = NULL;
   protected $variablesList = NULL;
+  protected $db_prefix = NULL;
   protected $args = [];
 
   public function __construct(ExecutorInterface $executor) {
@@ -61,6 +62,16 @@ class DrushCaller {
    */
   public function sqlQuery($sql) {
     global $argv;
+
+    // Database prefixes need to be added else the query will fail when this is
+    // in use.
+    if (is_null($this->db_prefix)) {
+      $sql_conf = $this->sqlConf('--format=json')->parseJson();
+      $this->db_prefix = $sql_conf->prefix;
+    }
+
+    // Replace the curly braces.
+    $sql = str_replace(array('{', '}'), array($this->db_prefix, ''), $sql);
 
     // @TODO do this better.
     $acsf_or_multi = ($argv[1] == 'audit:site') ? FALSE : TRUE;
@@ -143,7 +154,7 @@ class DrushCaller {
    */
   public function getVariableFromDB($name, $default = 0) {
     try {
-      $output = $this->sqlQuery("SELECT value FROM variable WHERE name = '$name';");
+      $output = $this->sqlQuery("SELECT value FROM {variable} WHERE name = '$name';");
       if (empty($output)) {
         $value = $default;
       }
@@ -169,7 +180,7 @@ class DrushCaller {
   }
 
   public function getAllUserRoles() {
-    return $this->sqlQuery('SELECT rid FROM users_roles WHERE uid > 1;');
+    return $this->sqlQuery('SELECT rid FROM {users_roles} WHERE uid > 1;');
   }
 
   public function getAllRoles() {

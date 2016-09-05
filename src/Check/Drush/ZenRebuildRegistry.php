@@ -18,7 +18,7 @@ use SiteAudit\Annotation\CheckInfo;
 class ZenRebuildRegistry extends Check {
   public function check() {
 
-    $output = $this->context->drush->sqlQuery("SELECT * FROM variable WHERE name LIKE 'theme_%';");
+    $output = $this->context->drush->sqlQuery("SELECT * FROM {variable} WHERE name LIKE 'theme_%';");
     $themes_with_rebuild_enabled = [];
     foreach ($output as $row) {
       preg_match('/^theme_([a-zA-Z_]+)_settings/', $row, $matches);

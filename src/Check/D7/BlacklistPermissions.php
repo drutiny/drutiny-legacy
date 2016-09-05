@@ -31,7 +31,7 @@ class BlacklistPermissions extends Check {
     $admin_role = $this->context->drush->getVariable('user_admin_role', 0);
 
     try {
-      $output = $this->context->drush->sqlQuery('SELECT r.rid, r.name, rp.permission FROM role r INNER JOIN role_permission rp ON rp.rid = r.rid WHERE r.rid != ' . $admin_role . ' AND (' . implode(' OR ', $where) . ');');
+      $output = $this->context->drush->sqlQuery('SELECT r.rid, r.name, rp.permission FROM {role} r INNER JOIN {role_permission} rp ON rp.rid = r.rid WHERE r.rid != ' . $admin_role . ' AND (' . implode(' OR ', $where) . ');');
       $output = array_filter($output);
     }
     catch (\Exception $e) {
