@@ -58,6 +58,27 @@ class DrushCaller {
   }
 
   /**
+   * Execute a PHP script in the context of the Drupal site. This uses a rather
+   * tricky amount of base64 encoding to ensure no characters are lost.
+   *
+   * @param [String] $filename
+   *   The filename of the script in the './src/Scripts/' folder. The .php
+   *   extens is not required. The script in question should return JSON for
+   *   all of it's results.
+   * @return [String]
+   *   The result of the Drush command.
+   */
+  public function runScript($filename) {
+    $location = './src/Scripts/' . $filename . '.php';
+    if (!file_exists($location)) {
+      throw new \Exception("No script found at $location.");
+    }
+    $base64 = base64_encode(file_get_contents($location));
+    $output = $this->phpEval("\\\"eval(base64_decode('" . $base64 . "'));\\\"")->parseJson();
+    return $output;
+  }
+
+  /**
    * Wrapper function to hide the quoting madness.
    */
   public function sqlQuery($sql) {
