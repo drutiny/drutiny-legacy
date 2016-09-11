@@ -31,8 +31,8 @@ class SessionsAnon extends Check {
       $number_of_anon_sessions = (int) $output[1];
     }
     $this->setToken('number_of_anon_sessions', $number_of_anon_sessions);
-    $this->setToken('plural', count($number_of_anon_sessions) > 1 ? 's' : '');
-    $this->setToken('prefix', count($number_of_anon_sessions) > 1 ? 'are' : 'is');
+    $this->setToken('plural', $number_of_anon_sessions > 1 ? 's' : '');
+    $this->setToken('prefix', $number_of_anon_sessions > 1 ? 'are' : 'is');
 
     return $number_of_anon_sessions === 0;
   }
