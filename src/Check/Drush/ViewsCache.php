@@ -19,6 +19,7 @@ class ViewsCache extends Check {
   public function check() {
 
     $output = $this->context->drush->runScript('ViewsCache');
+    var_dump($output);
 
     return TRUE;
   }

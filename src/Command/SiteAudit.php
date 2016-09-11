@@ -21,6 +21,9 @@ class SiteAudit extends Command {
   protected $start = NULL;
   protected $end = NULL;
 
+  // Keeps track on whether this is a local or remote site audit.
+  protected $isRemote = FALSE;
+
   /**
    * @inheritdoc
    */
@@ -93,8 +96,8 @@ class SiteAudit extends Command {
             ->set('alias', $drush_alias)
             ->set('config', $alias);
 
-    // Some checks don't use drush and connect to the server
-    // directly so we need a remote executor available as well.
+    // Some checks don't use drush and connect to the server directly so we need
+    // a remote executor available as well.
     if (isset($alias['remote-host'], $alias['remote-user'])) {
       $executor = new ExecutorRemote($output);
       $executor->setRemoteUser($alias['remote-user'])
@@ -107,6 +110,9 @@ class SiteAudit extends Command {
       }
       catch (InvalidArgumentException $e) {}
       $context->set('remoteExecutor', $executor);
+      $this->isRemote = TRUE;
+      $drush->setIsRemote($this->isRemote);
+      $context->set('drush', $drush);
     }
 
     $results = $this->runChecks($context);

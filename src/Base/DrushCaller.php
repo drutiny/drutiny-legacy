@@ -12,6 +12,7 @@ class DrushCaller {
   protected $variablesList = NULL;
   protected $db_prefix = NULL;
   protected $args = [];
+  protected $isRemote = FALSE;
 
   public function __construct(ExecutorInterface $executor) {
     $this->executor = $executor;
@@ -24,6 +25,11 @@ class DrushCaller {
 
   public function setArgument($arg) {
     $this->args[] = $arg;
+    return $this;
+  }
+
+  public function setIsRemote($isRemote) {
+    $this->isRemote = $isRemote;
     return $this;
   }
 
@@ -74,7 +80,15 @@ class DrushCaller {
       throw new \Exception("No script found at $location.");
     }
     $base64 = base64_encode(file_get_contents($location));
-    $output = $this->phpEval("\\\"eval(base64_decode('" . $base64 . "'));\\\"")->parseJson();
+
+    // Remote execution requires more escaping.
+    if ($this->isRemote) {
+      $output = $this->phpEval('\"' . "eval(base64_decode('" . $base64 . "'));" . '\"')->parseJson();
+    }
+    else {
+      $output = $this->phpEval('"' . "eval(base64_decode('" . $base64 . "'));" . '"')->parseJson();
+    }
+
     return $output;
   }
 
@@ -94,9 +108,8 @@ class DrushCaller {
     // Replace the curly braces.
     $sql = str_replace(array('{', '}'), array($this->db_prefix, ''), $sql);
 
-    // @TODO do this better.
-    $acsf_or_multi = ($argv[1] == 'audit:site') ? FALSE : TRUE;
-    if ($acsf_or_multi) {
+    // Remote execution requires more escaping.
+    if ($this->isRemote) {
       $result = $this->sqlq('\"' . $sql . '\"');
     }
     else {

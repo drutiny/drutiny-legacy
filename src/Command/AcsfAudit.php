@@ -54,13 +54,18 @@ class AcsfAudit extends SiteAudit {
     $drush = new DrushCaller($executor);
     $response = $drush->siteAlias('@' . $drush_alias, '--format=json')->parseJson(TRUE);
     $alias = $response[$drush_alias];
-    // $drush->setAlias($drush_alias);
 
-    // We need to obtain the sites.json file from the ACSF server.
-    $docroot_parts = explode('/', $alias['root']);
-    array_pop($docroot_parts);
-    $docroot_name = array_pop($docroot_parts);
-    $acsf_sites_json = '/mnt/files/' . $docroot_name . '/files-private/sites.json';
+    $profile = new Profile();
+    $profile->load($input->getOption('profile'));
+
+    $context = new Context();
+    $context->set('input', $input)
+            ->set('output', $output)
+            ->set('reportsDir', $reports_dir)
+            ->set('executor', $executor)
+            ->set('profile', $profile)
+            ->set('remoteExecutor', $executor)
+            ->set('drush', $drush);
 
     // Some checks don't use drush and connect to the server
     // directly so we need a remote executor available as well.
@@ -75,13 +80,17 @@ class AcsfAudit extends SiteAudit {
         $executor->setArgument($input->getOption('ssh_options'));
       }
       catch (InvalidArgumentException $e) {}
+      $context->set('remoteExecutor', $executor);
+      $this->isRemote = TRUE;
     }
 
+    // We need to obtain the sites.json file from the ACSF server.
+    $docroot_parts = explode('/', $alias['root']);
+    array_pop($docroot_parts);
+    $docroot_name = array_pop($docroot_parts);
+    $acsf_sites_json = '/mnt/files/' . $docroot_name . '/files-private/sites.json';
     $json_data = $executor->execute('cat ' . $acsf_sites_json)->parseJson(TRUE);
     $sites = $json_data['sites'];
-
-    $profile = new Profile();
-    $profile->load($input->getOption('profile'));
 
     // The parsed json can contain multiple duplicate site entries due to
     // site collections and site clones. We want to ensure we do not run the
@@ -117,6 +126,7 @@ class AcsfAudit extends SiteAudit {
       }
     }
 
+    // @TODO convert this to optional input arguments.
     //var_dump($unique_sites);
     //$unique_sites = array_slice($unique_sites, 0 , 2, TRUE);
     //$unique_sites = array_slice($unique_sites, 185 , 8, TRUE);
@@ -129,16 +139,10 @@ class AcsfAudit extends SiteAudit {
       $domain = $values['domain'];
       $drush = new DrushCaller($executor);
       $drush->setArgument('--uri=' . $domain)
-            ->setArgument('--root=' . $alias['root']);
+            ->setArgument('--root=' . $alias['root'])
+            ->setIsRemote($this->isRemote);
 
-      $context = new Context();
-      $context->set('input', $input)
-              ->set('output', $output)
-              ->set('reportsDir', $reports_dir)
-              ->set('executor', $executor)
-              ->set('profile', $profile)
-              ->set('remoteExecutor', $executor)
-              ->set('drush', $drush);
+      $context->set('drush', $drush);
 
       $output->writeln("<comment>[$i] Running audit over: {$domain}</comment>");
       $results = $this->runChecks($context);
