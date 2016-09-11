@@ -140,7 +140,8 @@ class AcsfAudit extends SiteAudit {
       $drush = new DrushCaller($executor);
       $drush->setArgument('--uri=' . $domain)
             ->setArgument('--root=' . $alias['root'])
-            ->setIsRemote($this->isRemote);
+            ->setIsRemote($this->isRemote)
+            ->setSingleSite(FALSE);
 
       $context->set('drush', $drush);
 

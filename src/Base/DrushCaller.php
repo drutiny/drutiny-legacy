@@ -13,6 +13,7 @@ class DrushCaller {
   protected $db_prefix = NULL;
   protected $args = [];
   protected $isRemote = FALSE;
+  protected $singleSite = TRUE;
 
   public function __construct(ExecutorInterface $executor) {
     $this->executor = $executor;
@@ -30,6 +31,11 @@ class DrushCaller {
 
   public function setIsRemote($isRemote) {
     $this->isRemote = $isRemote;
+    return $this;
+  }
+
+  public function setSingleSite($singleSite) {
+    $this->singleSite = $singleSite;
     return $this;
   }
 
@@ -81,8 +87,8 @@ class DrushCaller {
     }
     $base64 = base64_encode(file_get_contents($location));
 
-    // Remote execution requires more escaping.
-    if ($this->isRemote) {
+    // Remote execution on multiple sites requires more escaping.
+    if ($this->isRemote && !$this->singleSite) {
       $output = $this->phpEval('\"' . "eval(base64_decode('" . $base64 . "'));" . '\"')->parseJson();
     }
     else {
@@ -108,8 +114,8 @@ class DrushCaller {
     // Replace the curly braces.
     $sql = str_replace(array('{', '}'), array($this->db_prefix, ''), $sql);
 
-    // Remote execution requires more escaping.
-    if ($this->isRemote) {
+    // Remote execution on multiple sites requires more escaping.
+    if ($this->isRemote && !$this->singleSite) {
       $result = $this->sqlq('\"' . $sql . '\"');
     }
     else {
