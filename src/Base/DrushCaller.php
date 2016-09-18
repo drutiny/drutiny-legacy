@@ -10,6 +10,7 @@ class DrushCaller {
   protected $alias;
   protected $modulesList = NULL;
   protected $variablesList = NULL;
+  protected $drushStatus = NULL;
   protected $db_prefix = NULL;
   protected $args = [];
   protected $isRemote = FALSE;
@@ -123,6 +124,32 @@ class DrushCaller {
     }
 
     return $result->getOutput();
+  }
+
+
+  /**
+   * Get a drush core status from the site.
+   *
+   * @param $key [string]
+   * @return a drush core status object.
+   */
+  public function getCoreStatus($key = NULL) {
+    try {
+      // First time this is run, refresh the drush core statuss list.
+      if (is_null($this->drushStatus)) {
+        $this->drushStatus = $this->coreStatus('--format=json')->parseJson();
+      }
+
+      // Shortcut if you provide a key.
+      if ($key && isset($this->drushStatus->{$key})) {
+        return $this->drushStatus->{$key};
+      }
+
+      return $this->drushStatus;
+    }
+    catch (\Exception $e) {
+      return FALSE;
+    }
   }
 
   /**
