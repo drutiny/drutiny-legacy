@@ -13,7 +13,9 @@ checks :
       - acsf_variables
       - acquia_spi
       - acquia_agent
+      - devel
       - securepages
+      - simpletest
   \SiteAudit\Check\Drush\ModuleDisabled:
     modules:
       - dblog
@@ -24,6 +26,7 @@ checks :
       - statistics
   \SiteAudit\Check\Drush\PreprocessCSS : {}
   \SiteAudit\Check\Drush\PreprocessJS : {}
+  \SiteAudit\Check\Drush\ErrorLevel : {}
   \SiteAudit\Check\Drush\SecurepagesBasepath : {}
   \SiteAudit\Check\Drush\SecurepagesRedirectToHttps : {}
   \SiteAudit\Check\Drush\UserRegister : {}
@@ -43,3 +46,5 @@ checks :
   \SiteAudit\Check\Acsf\ThemeSize :
     max_size : 50
     warning_size: 20
+  \SiteAudit\Check\Acsf\ThemePhpLint : {}
+  \SiteAudit\Check\Acsf\ThemeSecurity : {}
