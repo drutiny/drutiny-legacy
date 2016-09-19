@@ -79,6 +79,12 @@ class SiteAudit extends Command {
     $executor = new Executor($output);
     $drush = new DrushCaller($executor);
     $response = $drush->siteAlias('@' . $drush_alias, '--format=json')->parseJson(TRUE);
+
+    // Check for made up aliases.
+    if (!array_key_exists($drush_alias, $response)) {
+      throw new \Exception('Missing site alias for ' . $drush_alias . '. Please check `drush sa` for a list of aliases.');
+    }
+
     $alias = $response[$drush_alias];
     $drush->setAlias($drush_alias);
 
