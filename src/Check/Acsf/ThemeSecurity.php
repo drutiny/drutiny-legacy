@@ -13,7 +13,7 @@ use SiteAudit\Annotation\CheckInfo;
  *  description = "Some basic checks to ensure that the theme is not doing any seriously bad things. Note this is not supposed to be perfect, but used as an aid in code review.",
  *  remediation = "Look to shift the functionality to a module, and get it out of the theme.",
  *  success = "No security issues found.",
- *  failure = "Security issue:plural :prefix found - <code>:issues</code>.",
+ *  failure = "Security issue:plural :prefix found - <br><br><code>:issues</code>.",
  *  exception = "Could not determine theme security.",
  *  not_available = "No custom theme is linked.",
  * )
@@ -63,9 +63,10 @@ class ThemeSecurity extends Check {
     // Output from find is a giant string with newlines to seperate the files.
     $rows = explode("\n", $output);
     $rows = array_map('trim', $rows);
+    $rows = array_map('strip_tags', $rows);
     $rows = array_filter($rows);
 
-    $this->setToken('issues', implode(', ', $rows));
+    $this->setToken('issues', implode('</code>, <br><code>', $rows));
     $this->setToken('plural', count($rows) > 1 ? 's' : '');
     $this->setToken('prefix', count($rows) > 1 ? 'were' : 'was');
 
