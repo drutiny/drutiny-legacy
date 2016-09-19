@@ -11,7 +11,7 @@ use SiteAudit\Annotation\CheckInfo;
  *  description = "When PHP encounters an error, it can generate an error log and display a report on the screen. While these error messages can be helpful in debugging your site, they can be a security risk on a live site as they may reveal information about your server that can be used to compromise it.",
  *  remediation = "Set the variable <code>error_level</code> to be <code>0</code>.",
  *  success = "Errors are not shown on the screen.",
- *  failure = "Errors are shown on the screen, current set to log <code>:error_level</code>.",
+ *  failure = "Errors are shown on the screen, currently set to log <code>:error_level</code>.",
  *  exception = "Could not determine error level setting.",
  * )
  */
