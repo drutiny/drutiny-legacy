@@ -23,6 +23,7 @@ checks :
       - update
   \SiteAudit\Check\Drush\PreprocessCSS : {}
   \SiteAudit\Check\Drush\PreprocessJS : {}
+  \SiteAudit\Check\Drush\ErrorLevel : {}
   \SiteAudit\Check\Drush\UserRegister : {}
   \SiteAudit\Check\Drush\PageCacheMaximumAge :
     cache : 300
