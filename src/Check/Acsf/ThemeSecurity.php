@@ -66,6 +66,16 @@ class ThemeSecurity extends Check {
     $rows = array_map('strip_tags', $rows);
     $rows = array_filter($rows);
 
+    // Ignore certain paths that are known to be safe.
+    foreach ($rows as $index => $row) {
+      if (strpos($row, './bootstrap/includes/cdn.inc:') === 0) {
+        unset($rows[$index]);
+      }
+      if (strpos($row, './bootstrap/includes/bootstrap.drush.inc:') === 0) {
+        unset($rows[$index]);
+      }
+    }
+
     $this->setToken('issues', implode('</code>, <br><code>', $rows));
     $this->setToken('plural', count($rows) > 1 ? 's' : '');
     $this->setToken('prefix', count($rows) > 1 ? 'were' : 'was');
