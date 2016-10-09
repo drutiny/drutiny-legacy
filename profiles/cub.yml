@@ -13,9 +13,7 @@ checks :
       - acsf_variables
       - acquia_spi
       - acquia_agent
-      - devel
       - securepages
-      - simpletest
   \SiteAudit\Check\Drush\ModuleDisabled:
     modules:
       - dblog
