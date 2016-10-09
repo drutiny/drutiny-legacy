@@ -51,6 +51,7 @@ checks :
     cache : '0'
     codesnippet_after : "ga('create', 'UA-54970022-1', 'auto', {'name': 'govcms'}); ga('govcms.send', 'pageview', {'anonymizeIp': true});"
   \SiteAudit\Check\Drush\NoAdministrators : {}
+  \SiteAudit\Check\Drush\WebformUpload : {}
   \SiteAudit\Check\Drush\PageCacheMaximumAge :
     cache : 300
   \SiteAudit\Check\Drush\UpdateDBStatus: {}
