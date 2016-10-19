@@ -25,6 +25,7 @@ checks :
   \SiteAudit\Check\Drush\PreprocessJS : {}
   \SiteAudit\Check\Drush\ErrorLevel : {}
   \SiteAudit\Check\Drush\UserRegister : {}
+  \SiteAudit\Check\Drush\CacheLifetime : {}
   \SiteAudit\Check\Drush\PageCacheMaximumAge :
     cache : 300
   \SiteAudit\Check\Drush\UpdateDBStatus: {}
@@ -36,4 +37,4 @@ checks :
   \SiteAudit\Check\Drush\CronPoorMans: {}
   \SiteAudit\Check\Drush\PageCompression: {}
   \SiteAudit\Check\Drush\XMLSiteMapBaseUrl:
-    pattern : '^https?://.+$'
+    pattern : '^https://www\.[-a-z]{1,63}\.[a-z]{2,3}(\.[a-z]{2,3})?$'
