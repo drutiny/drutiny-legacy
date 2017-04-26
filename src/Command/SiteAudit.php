@@ -323,7 +323,8 @@ class SiteAudit extends Command {
   protected function getReportFilepath(Profile $profile, $format, array $site = [], array $sites = []) {
     $filename = "drutiny.$format";
     if (!empty($site)) {
-      $filename = implode('.', [$site['domain'], $format]);
+      $domain = preg_replace("/[^A-Za-z0-9.-]/", '', $site['domain']);
+      $filename = implode('.', [$domain, $format]);
     }
     elseif (!empty($sites)) {
       $filename = implode('.', [$profile->getMachineName(), $format]);
